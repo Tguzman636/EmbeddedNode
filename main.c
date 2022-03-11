@@ -401,6 +401,21 @@ void JoystickHandler() {
 			if ((BridgePointX==0 && (BridgePointY==4 | BridgePointY==5 | BridgePointY==6)) |
 					(BridgePointX==1 && (BridgePointY==2 | BridgePointY==3 | BridgePointY==7 | BridgePointY==8)) |
 					(BridgePointX==2 && (BridgePointY==0 | BridgePointY==1 | BridgePointY==9 | BridgePointY==10))){
+				if ((BridgePointX==1 && BridgePointY==2) |
+						(BridgePointX==2 && BridgePointY==0)) {
+					BridgePointY++;		
+				} else if (	(BridgePointX==1 && BridgePointY==3) |
+										(BridgePointX==2 && BridgePointY==1)) {
+					BridgePointX--;
+					BridgePointY++;
+				} else if (	(BridgePointX==1 && BridgePointY==8) |
+										(BridgePointX==2 && BridgePointY==10)) {
+					BridgePointY--;
+				} else if (	(BridgePointX==1 && BridgePointY==7) |
+										(BridgePointX==2 && BridgePointY==9)) {
+					BridgePointY--;
+					BridgePointX--;
+				}
 				//N/A
 			} else {
 				BridgePointX--;
@@ -420,6 +435,23 @@ void JoystickHandler() {
 					(BridgePointX==3 && (BridgePointY==1 | BridgePointY==2 | BridgePointY==8 | BridgePointY==9)) |
 					(BridgePointX==4 && (BridgePointY==3 | BridgePointY==4 | BridgePointY==6 | BridgePointY==7)) |
 					(BridgePointX==5 && BridgePointY==5)){
+				if ((BridgePointX==2 && BridgePointY==0) |
+						(BridgePointX==3 && BridgePointY==2) |
+						(BridgePointX==4 && BridgePointY==4)) {
+					BridgePointY++;
+					BridgePointX++;
+				} else if (	(BridgePointX==3 && BridgePointY==1) |
+										(BridgePointX==4 && BridgePointY==3)) {
+					BridgePointY++;
+				} else if (	(BridgePointX==2 && BridgePointY==10) |
+										(BridgePointX==3 && BridgePointY==8)	|
+										(BridgePointX==4 && BridgePointY==6)) {
+					BridgePointY--;
+					BridgePointX++;
+				} else if (	(BridgePointX==3 && BridgePointY==9) |
+										(BridgePointX==4 && BridgePointY==7)) {
+					BridgePointY--;
+				}
 				//N/A
 			} else {
 				BridgePointX++;
