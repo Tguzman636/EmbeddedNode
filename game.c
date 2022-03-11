@@ -19,8 +19,26 @@ void ScoreHandler() {
 	for (int i=0; i<10; i++) {
 		for (int j=0; j<5; j++) {
 			if (bridge_owner[i][j] == 1) {
-				Score[0]++;
+				Score[0]+=2;
 			} else if (bridge_owner[i][j] == 2) {
+				Score[1]+=2;
+			}
+		}
+	}
+	for (int i = 0; i< 6; i++) {
+		for (int j=0;i<6;j++){
+			if (node_owner[i][j] == 1) {
+				Score[0]++;
+			} else if (node_owner[i][j] == 2) {
+				Score[1]++;
+			}
+		}
+	}
+	for (int i=0; i<7;i++) {
+		for (int j=0;j<7;j++) {
+			if (resourceavailable[i][j].owner==1) {
+				Score[0]++;
+			} else if (resourceavailable[i][j].owner==2) {
 				Score[1]++;
 			}
 		}
@@ -34,7 +52,8 @@ void GatherResource() {
 				if (node_owner[i][j] == 1) {
 					for (int x=0; x<2;x++) {
 						for (int y = 0; y<2;y++) {
-							if (resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) {
+							if ((resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) |
+									(resourceavailable[i+x][j+y].owner==1)) {
 								Player1Res[(resourceavailable[i+x][j+y].color)-1]++;
 							}
 						}
@@ -48,7 +67,8 @@ void GatherResource() {
 				if (node_owner[i][j] == 2) {
 					for (int x=0; x<2;x++) {
 						for (int y = 0; y<2;y++) {
-							if (resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) {
+							if ((resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) |
+									(resourceavailable[i+x][j+y].owner==2)) {
 								Player2Res[(resourceavailable[i+x][j+y].color)-1]++;
 							}
 						}
@@ -68,14 +88,36 @@ void PurchaseNode() {
 				resourceavailable[NodePointX+1][NodePointY+1].NumOfNodes++;
 				resourceavailable[NodePointX+1][NodePointY].NumOfNodes++;
 				resourceavailable[NodePointX][NodePointY+1].NumOfNodes++;
+				Player1Res[2]-=2;
+				Player1Res[3]-=2;
 			}
-		} else if (TURN == 1) {
+		} else if (TURN == 2) {
 			if (Player2Res[2] >= 2 && Player2Res[3]>=2) {
 				node_owner[NodePointX][NodePointY] = 2;
 				resourceavailable[NodePointX][NodePointY].NumOfNodes++;
 				resourceavailable[NodePointX+1][NodePointY+1].NumOfNodes++;
 				resourceavailable[NodePointX+1][NodePointY].NumOfNodes++;
 				resourceavailable[NodePointX][NodePointY+1].NumOfNodes++;
+				Player2Res[2]-=2;
+				Player2Res[3]-=2;
+			}
+		}
+	}
+}
+
+void PurchaseBridge() {
+	if (bridge_owner[BridgePointX][BridgePointY] == 0) {
+		if (TURN == 1) {
+			if (Player1Res[0] >= 1 && Player1Res[3]>=1) {
+				bridge_owner[BridgePointX][BridgePointY] = 1;
+				Player1Res[0]--;
+				Player1Res[1]--;
+			}
+		} else if (TURN == 2) {
+			if (Player2Res[0] >= 1 && Player2Res[3]>=1) {
+				bridge_owner[BridgePointX][BridgePointY] = 2;
+				Player2Res[0]--;
+				Player2Res[1]--;
 			}
 		}
 	}
