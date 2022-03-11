@@ -1,6 +1,7 @@
 
 /*Modes {Node = 1, Bridge = 2}*/ 
 int MODE = 0;
+int TURN = 0;
 
 /*Pointers*/
 int NodePointX = 0;
@@ -28,11 +29,27 @@ struct ArrayCoords {
 	int Y;
 };
 
+struct resourcenode {
+	int NumOfNodes;
+	int dots;
+	int color;
+};
+
 struct ArrayBridgeCoords {
 	int XS;
 	int XF;
 	int YS;
 	int YF;
+};
+
+struct resourcenode resourceavailable[7][7] = {
+{{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}},
+{{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}},
+{{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}},
+{{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}},
+{{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}},
+{{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}},
+{{0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}, {0,0,0}}
 };
 
 struct ArrayCoords NodeCoord[6][6] = {  

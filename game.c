@@ -1,11 +1,15 @@
+#include <stdio.h>
+
 #include "game.h"
 
-#define NODE 		1
-#define BRIDGE 	2
-#define UP 			3
-#define DOWN 		4
-#define LEFT 		5
-#define RIGHT		6
+#define NODE 			1
+#define BRIDGE 		2
+#define UP 				3
+#define DOWN 			4
+#define LEFT 			5
+#define RIGHT			6
+#define SWITCH		7
+#define PURCHASE 	8
 
 int direction;
 
@@ -23,13 +27,66 @@ void ScoreHandler() {
 	}
 }
 
+void GatherResource() {
+	if (TURN == 1) {
+		for (int i=0; i<6;i++) {
+			for (int j=0; j<6;j++) {
+				if (node_owner[i][j] == 1) {
+					for (int x=0; x<2;x++) {
+						for (int y = 0; y<2;y++) {
+							if (resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) {
+								Player1Res[(resourceavailable[i+x][j+y].color)-1]++;
+							}
+						}
+					}
+				}
+			}
+		}
+	} else if (TURN == 2) {
+		for (int i=0; i<6;i++) {
+			for (int j=0; j<6;j++) {
+				if (node_owner[i][j] == 2) {
+					for (int x=0; x<2;x++) {
+						for (int y = 0; y<2;y++) {
+							if (resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) {
+								Player2Res[(resourceavailable[i+x][j+y].color)-1]++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void PurchaseNode() {
+	if (node_owner[NodePointX][NodePointY] == 0) {
+		if (TURN == 1) {
+			if (Player1Res[2] >= 2 && Player1Res[3]>=2) {
+				node_owner[NodePointX][NodePointY] = 1;
+				resourceavailable[NodePointX][NodePointY].NumOfNodes++;
+				resourceavailable[NodePointX+1][NodePointY+1].NumOfNodes++;
+				resourceavailable[NodePointX+1][NodePointY].NumOfNodes++;
+				resourceavailable[NodePointX][NodePointY+1].NumOfNodes++;
+			}
+		} else if (TURN == 1) {
+			if (Player2Res[2] >= 2 && Player2Res[3]>=2) {
+				node_owner[NodePointX][NodePointY] = 2;
+				resourceavailable[NodePointX][NodePointY].NumOfNodes++;
+				resourceavailable[NodePointX+1][NodePointY+1].NumOfNodes++;
+				resourceavailable[NodePointX+1][NodePointY].NumOfNodes++;
+				resourceavailable[NodePointX][NodePointY+1].NumOfNodes++;
+			}
+		}
+	}
+}
+
 void JoystickHandler() {
 	if (direction == NODE) {
 		MODE = 1;
 	} else if (direction == BRIDGE) {
 		MODE = 2;
-	}
-	if (direction == UP) {
+	} else if (direction == UP) {
 		if (MODE == 1) {
 			if ((NodePointY==2 && (NodePointX==0 | NodePointX==5)) |
 					(NodePointY==1 && (NodePointX==1 | NodePointX==4)) |
@@ -38,8 +95,7 @@ void JoystickHandler() {
 			} else {
 				NodePointY--;
 			}
-		}
-		if (MODE == 2) {
+		} else if (MODE == 2) {
 			if ((BridgePointX==0 && BridgePointY==4) |
 					(BridgePointX==1 && BridgePointY==2) |
 					(BridgePointX==2 && BridgePointY==0) |
@@ -61,8 +117,7 @@ void JoystickHandler() {
 				BridgePointY--;
 			}
 		}
-	}
-	if (direction == DOWN) {
+	} else if (direction == DOWN) {
 		if (MODE == 1) {
 			if ((NodePointY==3 && (NodePointX==0 | NodePointX==5)) |
 					(NodePointY==4 && (NodePointX==1 | NodePointX==4)) |
@@ -71,8 +126,7 @@ void JoystickHandler() {
 			} else {
 				NodePointY++;
 			}
-		}
-		if (MODE == 2) {
+		} else if (MODE == 2) {
 			if ((BridgePointX==0 && BridgePointY==6) |
 					(BridgePointX==1 && BridgePointY==8) |
 					(BridgePointX==2 && BridgePointY==10) |
@@ -94,16 +148,14 @@ void JoystickHandler() {
 				BridgePointY++;
 			}
 		}
-	}
-	if (direction == LEFT) {
+	} else if (direction == LEFT) {
 		if (MODE == 1) {
 			if ((NodePointX==2 && (NodePointY==0 | NodePointY==5)) | (NodePointX==1 && (NodePointY==1 | NodePointY==4)) | (NodePointX==0 && (NodePointY==2 | NodePointY==3))) {
 				//N/A
 			} else {
 				NodePointX--;
 			}
-		}
-		if (MODE == 2) {
+		} else if (MODE == 2) {
 			if ((BridgePointX==0 && (BridgePointY==4 | BridgePointY==5 | BridgePointY==6)) |
 					(BridgePointX==1 && (BridgePointY==2 | BridgePointY==3 | BridgePointY==7 | BridgePointY==8)) |
 					(BridgePointX==2 && (BridgePointY==0 | BridgePointY==1 | BridgePointY==9 | BridgePointY==10))){
@@ -127,16 +179,14 @@ void JoystickHandler() {
 				BridgePointX--;
 			}
 		}
-	}
-	if (direction == RIGHT) {
+	} else if (direction == RIGHT) {
 		if (MODE == 1) {
 			if ((NodePointX==3 && (NodePointY==0 | NodePointY==5)) | (NodePointX==4 && (NodePointY==1 | NodePointY==4)) | (NodePointX==5 && (NodePointY==2 | NodePointY==3))) {
 				//N/A
 			} else {
 				NodePointX++;
 			}
-		}
-		if (MODE == 2) {
+		} else if (MODE == 2) {
 			if ((BridgePointX==2 && (BridgePointY==0 | BridgePointY==10)) |
 					(BridgePointX==3 && (BridgePointY==1 | BridgePointY==2 | BridgePointY==8 | BridgePointY==9)) |
 					(BridgePointX==4 && (BridgePointY==3 | BridgePointY==4 | BridgePointY==6 | BridgePointY==7)) |
@@ -162,6 +212,21 @@ void JoystickHandler() {
 			} else {
 				BridgePointX++;
 			}
+		}
+	} else if (direction == SWITCH) {
+		ScoreHandler();
+		TURN = (TURN%2)+1;
+		GatherResource();
+		NodePointX = 2;
+		NodePointY = 0;
+		BridgePointX = 2;
+		BridgePointY = 0;
+		MODE = 1;
+	} else if (direction == PURCHASE) {
+		if (MODE == 1) {
+			PurchaseNode();
+		} else if (MODE == 2) {
+			PurchaseBridge();
 		}
 	}
 }
