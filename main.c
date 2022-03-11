@@ -4,6 +4,7 @@
 #include "GPIO.h"
 #include "SSPI.h"
 #include "UTIL.h"
+#include "game.h"
 #include "LCD_Draw.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,61 +20,6 @@ uint8_t LIGHTGREEN = 165;
 uint8_t DARKGREEN = 20;
 uint8_t GREEN = 20;
 uint8_t YELLOW = 248;
-
-struct ArrayCoords {
-	int X;
-	int Y;
-};
-
-struct ArrayBridgeCoords {
-	int XS;
-	int XF;
-	int YS;
-	int YF;
-};
-
-struct ArrayCoords NodeCoord[6][6] = {  
-{{0,0},     {0,0},      {26,138},   {26,174},   {0,0},      {0,0}},
-{{0,0},     {62, 102},  {62, 138},  {62, 174},  {62, 210},  {0,0}},
-{{98, 66},  {98, 102},  {98, 138},  {98,174},   {98,210},   {98,246}},
-{{134, 66}, {134, 102}, {134, 138}, {134,174},  {134,210},  {134,246}},
-{{0,0},     {170, 102}, {170, 138}, {170, 174}, {170, 210}, {0,0}},
-{{0,0},     {0,0},      {206, 138}, {206, 174}, {0,0},      {0,0}}
-};
-
-struct ArrayBridgeCoords BridgeCoord[11][6] = {	
-{{0,0,0,0},						{0,0,0,0},						{103, 138, 69, 72},		{0,0,0,0},						{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{0,0,0,0},						{101, 104, 73, 106},	{137, 140, 73, 106},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{67, 102, 105, 108}, 	{103, 138, 105, 108}, {139, 174, 105, 108},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{65, 68, 107, 142}, 	{101, 104, 107, 142}, {137, 140, 107, 142}, {173, 176, 107, 142},	{0,0,0,0}},
-{{31, 66, 141, 144}, 	{67, 102, 141, 144}, 	{103, 138, 141, 144}, {139, 174, 141, 144}, {175, 210, 141, 144},	{0,0,0,0}},
-{{29, 32, 143, 178}, 	{65, 68, 143, 178}, 	{101, 104, 143, 178}, {137, 140, 143, 178}, {173, 176, 143, 178}, {209, 212, 143, 178}},
-{{31, 66, 177, 180}, 	{67, 102, 177, 180}, 	{103, 138, 177, 180}, {139, 174, 177, 180}, {175, 210, 177, 180},	{0,0,0,0}},
-{{0,0,0,0},						{65, 68, 179, 214}, 	{101, 104, 179, 214}, {137, 140, 179, 214}, {173, 176, 179, 214},	{0,0,0,0}},
-{{0,0,0,0},						{67, 102, 213, 216}, 	{103, 138, 213, 216}, {139, 174, 213, 216},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{0,0,0,0},						{101, 104, 215, 250}, {137, 140, 215, 250},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{0,0,0,0},						{103, 138, 249, 252},	{0,0,0,0},						{0,0,0,0},						{0,0,0,0}}																		
-};
-/*Ownership Tracker*/
-int own_box[5][5] = {0};
-int own_nodes[6][6] = {0};
-int own_bridges[11][6] = {0};
-
-/*ResourceTracker*/
-/*Red/Blue/Yellow/Green*/
-int Player1Res[4];
-int Player2Res[4];
-int Score[2] = {0}; //Player 1 : Player 2
-
-int NodePointX = 0;
-int NodePointY = 0;
-int BridgePointX = 0;
-int BridgePointY = 0;
-
-/*Box Randomized*/
-int box_color[13]={0,1,1,1,2,2,2,3,3,3,4,4,4};	// Keep track of color of box
-int box_count[13]={0,1,1,1,1,2,2,2,2,3,3,3,3};	// Keep track of color count
-int box_avail[13]={3,3,3,3,3,3,3,3,3,3,3,3,3};	// Keep track of available box
 
 void shuffle(int *array, int n) {
 	srand(300);
@@ -246,12 +192,12 @@ void NodePointer() {
 							NodeCoord[NodePointX][NodePointY].Y,
 							11,
 							DARKGREEN);
-	delay(100);
+	delay(1000);
 	LCD_Circle( NodeCoord[NodePointX][NodePointY].X,
 							NodeCoord[NodePointX][NodePointY].Y,
 							11,
 							BLACK);
-	delay(100);
+	delay(1000);
 }
 void BridgePointer() {
 	LCD_FillRect( BridgeCoord[BridgePointX][BridgePointY].XS,
@@ -259,13 +205,13 @@ void BridgePointer() {
 								BridgeCoord[BridgePointX][BridgePointY].YS,
 								BridgeCoord[BridgePointX][BridgePointY].XF,
 								RED);
-	delay(100);
+	delay(1000);
 	LCD_FillRect( BridgeCoord[BridgePointX][BridgePointY].XS,
 								BridgeCoord[BridgePointX][BridgePointY].XF,
 								BridgeCoord[BridgePointX][BridgePointY].YS,
 								BridgeCoord[BridgePointX][BridgePointY].XF,
 								WHITE);
-	delay(100);
+	delay(1000);
 }
 int main(void){
 	// Clock Setup
@@ -278,6 +224,7 @@ int main(void){
 	
   // Initialize the display.
 	ili9341_hspi_init();
+	
  // Set column range.
 	hspi_cmd(0x2A); //Command to draw rectangle
 	hspi_w16(0x0000); //where to start (width)
@@ -288,6 +235,7 @@ int main(void){
 	hspi_w16((uint16_t)(319)); //Where to end
 	// Set 'write to RAM'
 	hspi_cmd(0x2C);
+	
 	LCD_Screen(BLACK);
 	
 	// Randomize Box
@@ -295,167 +243,10 @@ int main(void){
 	DrawResource();
 	DrawWhiteBorder();
 	while(1) {
-		for (int i=0;i<6;i++) {
-			for (int j=0;j<6;j++) {
-				NodePointer();
-				NodePointX++;
-			}
-			NodePointX=0;
-			NodePointY++;
-		}
-		NodePointX=0;
-		NodePointY=0;
-	}
-}
-
-void ScoreHandler() {
-	Score[0] = 0;
-	Score[1] = 0;
-	for (int i=0; i<10; i++) {
-		for (int j=0; j<5; j++) {
-			if (own_bridges[i][j] == 1) {
-				Score[0]++;
-			} else if (own_bridges[i][j] == 2) {
-				Score[1]++;
-			}
-		}
-	}
-}
-
-void JoystickHandler() {
-	if (direction == UP) {
-		if (NodeMode == 1) {
-			if ((NodePointY==2 && (NodePointX==0 | NodePointX==5)) |
-					(NodePointY==1 && (NodePointX==1 | NodePointX==4)) |
-					(NodePointY==0 && (NodePointX==2 | NodePointX==3))) {
-				//N/A
-			} else {
-				NodePointY--;
-			}
-		}
-		if (BridgeMode == 1) {
-			if ((BridgePointX==0 && BridgePointY==4) |
-					(BridgePointX==1 && BridgePointY==2) |
-					(BridgePointX==2 && BridgePointY==0) |
-					(BridgePointX==3 && BridgePointY==1) |
-					(BridgePointX==4 && BridgePointY==3) |
-					(BridgePointX==5 && BridgePointY==5)) {
-				if ((BridgePointX==0 && BridgePointY==4) |
-						(BridgePointX==1 && BridgePointY==2)) {
-					BridgePointX++;
-					BridgePointY--;
-				} else if (	(BridgePointX==3 && BridgePointY==1) |
-										(BridgePointX==4 && BridgePointY==3) |
-										(BridgePointX==5 && BridgePointY==5)) {
-					BridgePointX--;
-					BridgePointY--;
-				}
-				//N/A
-			} else {
-				BridgePointY--;
-			}
-		}
-	}
-	if (direction == DOWN) {
-		if (NodeMode == 1) {
-			if ((NodePointY==3 && (NodePointX==0 | NodePointX==5)) |
-					(NodePointY==4 && (NodePointX==1 | NodePointX==4)) |
-					(NodePointY==5 && (NodePointX==2 | NodePointX==3))) {
-				//N/A
-			} else {
-				NodePointY++;
-			}
-		}
-		if (BridgeMode == 1) {
-			if ((BridgePointX==0 && BridgePointY==6) |
-					(BridgePointX==1 && BridgePointY==8) |
-					(BridgePointX==2 && BridgePointY==10) |
-					(BridgePointX==3 && BridgePointY==9) |
-					(BridgePointX==4 && BridgePointY==7) |
-					(BridgePointX==5 && BridgePointY==5)) {
-				if ((BridgePointX==0 && BridgePointY==6) |
-						(BridgePointX==1 && BridgePointY==8)) {
-					BridgePointY++;
-					BridgePointX++;
-				} else if (	(BridgePointX==3 && BridgePointY==9) |
-										(BridgePointX==4 && BridgePointY==7) |
-										(BridgePointX==5 && BridgePointY==5)) {
-					BridgePointX--;
-					BridgePointY++;
-				}
-				//N/A
-			} else {
-				BridgePointY++;
-			}
-		}
-	}
-	if (direction == LEFT) {
-		if (NodeMode == 1) {
-			if ((NodePointX==2 && (NodePointY==0 | NodePointY==5)) | (NodePointX==1 && (NodePointY==1 | NodePointY==4)) | (NodePointX==0 && (NodePointY==2 | NodePointY==3))) {
-				//N/A
-			} else {
-				NodePointX--;
-			}
-		}
-		if (BridgeMode == 1) {
-			if ((BridgePointX==0 && (BridgePointY==4 | BridgePointY==5 | BridgePointY==6)) |
-					(BridgePointX==1 && (BridgePointY==2 | BridgePointY==3 | BridgePointY==7 | BridgePointY==8)) |
-					(BridgePointX==2 && (BridgePointY==0 | BridgePointY==1 | BridgePointY==9 | BridgePointY==10))){
-				if ((BridgePointX==1 && BridgePointY==2) |
-						(BridgePointX==2 && BridgePointY==0)) {
-					BridgePointY++;		
-				} else if (	(BridgePointX==1 && BridgePointY==3) |
-										(BridgePointX==2 && BridgePointY==1)) {
-					BridgePointX--;
-					BridgePointY++;
-				} else if (	(BridgePointX==1 && BridgePointY==8) |
-										(BridgePointX==2 && BridgePointY==10)) {
-					BridgePointY--;
-				} else if (	(BridgePointX==1 && BridgePointY==7) |
-										(BridgePointX==2 && BridgePointY==9)) {
-					BridgePointY--;
-					BridgePointX--;
-				}
-				//N/A
-			} else {
-				BridgePointX--;
-			}
-		}
-	}
-	if (direction == RIGHT) {
-		if (NodeMode == 1) {
-			if ((NodePointX==3 && (NodePointY==0 | NodePointY==5)) | (NodePointX==4 && (NodePointY==1 | NodePointY==4)) | (NodePointX==5 && (NodePointY==2 | NodePointY==3))) {
-				//N/A
-			} else {
-				NodePointX++;
-			}
-		}
-		if (BridgeMode == 1) {
-			if ((BridgePointX==2 && (BridgePointY==0 | BridgePointY==10)) |
-					(BridgePointX==3 && (BridgePointY==1 | BridgePointY==2 | BridgePointY==8 | BridgePointY==9)) |
-					(BridgePointX==4 && (BridgePointY==3 | BridgePointY==4 | BridgePointY==6 | BridgePointY==7)) |
-					(BridgePointX==5 && BridgePointY==5)){
-				if ((BridgePointX==2 && BridgePointY==0) |
-						(BridgePointX==3 && BridgePointY==2) |
-						(BridgePointX==4 && BridgePointY==4)) {
-					BridgePointY++;
-					BridgePointX++;
-				} else if (	(BridgePointX==3 && BridgePointY==1) |
-										(BridgePointX==4 && BridgePointY==3)) {
-					BridgePointY++;
-				} else if (	(BridgePointX==2 && BridgePointY==10) |
-										(BridgePointX==3 && BridgePointY==8)	|
-										(BridgePointX==4 && BridgePointY==6)) {
-					BridgePointY--;
-					BridgePointX++;
-				} else if (	(BridgePointX==3 && BridgePointY==9) |
-										(BridgePointX==4 && BridgePointY==7)) {
-					BridgePointY--;
-				}
-				//N/A
-			} else {
-				BridgePointX++;
-			}
+		if (MODE == 1) {
+			NodePointer();
+		} else if (MODE == 2) {
+			BridgePointer();
 		}
 	}
 }
