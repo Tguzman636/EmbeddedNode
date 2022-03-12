@@ -1,7 +1,24 @@
-
+#include "stm32l476xx.h"
+#include "SysClock.h"
 #include "SysTimer.h"
+#include "GPIO.h"
+#include "SSPI.h"
+#include "UTIL.h"
+#include "game.h"
+#include "LCD_Draw.h"
+#include "I2C.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 volatile uint32_t msTicks;
+volatile uint32_t joystick;
+
+extern uint8_t SlaveAddress1;
+extern uint8_t SlaveAddress2;
+extern uint8_t Data_Receive[6];
+extern uint8_t Data_Start[2];
+extern	uint8_t Data_Conversion;
 
 
 //******************************************************************************************
@@ -41,6 +58,17 @@ void SysTick_Init(void){
 //******************************************************************************************
 void SysTick_Handler(void){
 	msTicks++;
+	joystick++;
+	if (joystick == 200) {
+	Data_Conversion = 0;
+	// Conversion Command
+	I2C_SendData(I2C1, SlaveAddress2, &Data_Conversion, 1);
+	// Read Nunchuck Data
+	I2C_ReceiveData(I2C1, SlaveAddress1, Data_Receive, 6);
+
+	JoystickHandler(Data_Receive);
+	joystick = 0;
+	}
 }
 	
 //******************************************************************************************

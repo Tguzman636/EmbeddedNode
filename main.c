@@ -6,11 +6,49 @@
 #include "UTIL.h"
 #include "game.h"
 #include "LCD_Draw.h"
+#include "I2C.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 //76200 Pixels
 
+extern int MODE;
+extern int TURN;
+
+extern int NodePointX;
+extern int NodePointY;
+extern int BridgePointX;
+extern int BridgePointY;
+
+extern int box_color[13];
+extern int box_count[13];
+
+extern int node_owner[6][6];
+extern int bridge_owner[11][6];
+
+extern int Player1Res[4];
+extern int Player2Res[4];
+
+extern int Score[2];
+
+uint8_t SlaveAddress1 = 0b10100101;
+uint8_t SlaveAddress2 = 0b10100100;
+uint8_t Data_Receive[6] = {0, 0, 0, 0, 0, 0};
+uint8_t Data_Start[2] = {0x40, 0x00};
+uint8_t Data_Conversion;
+
+struct ArrayCoords {
+	int X;
+	int Y;
+};
+struct ArrayBridgeCoords {
+	int XS;
+	int XF;
+	int YS;
+	int YF;
+};
+extern struct ArrayCoords NodeCoord[6][6];
+extern struct ArrayBridgeCoords BridgeCoord[11][6];
 uint8_t BLACK = 0;
 uint8_t WHITE = 255;
 uint8_t RED = 224;
@@ -22,7 +60,7 @@ uint8_t GREEN = 20;
 uint8_t YELLOW = 248;
 
 void shuffle(int *array, int n) {
-	srand(300);
+	srand(600);
   //srand(RNG->DR);
   for (int i = 0; i < n - 1; i++) {
 		size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
@@ -181,38 +219,12 @@ void DrawWhiteBorder() {
 		for (int j = 0; j<6; j++) {
 			LCD_Circle( NodeCoord[j][i].X,
 									NodeCoord[j][i].Y,
-									11,
+									10,
 									BLACK);
 		}
 	}
 }
 
-void NodePointer() {
-	LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
-							NodeCoord[NodePointX][NodePointY].Y,
-							11,
-							DARKGREEN);
-	delay(1000);
-	LCD_Circle( NodeCoord[NodePointX][NodePointY].X,
-							NodeCoord[NodePointX][NodePointY].Y,
-							11,
-							BLACK);
-	delay(1000);
-}
-void BridgePointer() {
-	LCD_FillRect( BridgeCoord[BridgePointX][BridgePointY].XS,
-								BridgeCoord[BridgePointX][BridgePointY].XF,
-								BridgeCoord[BridgePointX][BridgePointY].YS,
-								BridgeCoord[BridgePointX][BridgePointY].XF,
-								RED);
-	delay(1000);
-	LCD_FillRect( BridgeCoord[BridgePointX][BridgePointY].XS,
-								BridgeCoord[BridgePointX][BridgePointY].XF,
-								BridgeCoord[BridgePointX][BridgePointY].YS,
-								BridgeCoord[BridgePointX][BridgePointY].XF,
-								WHITE);
-	delay(1000);
-}
 int main(void){
 	// Clock Setup
 	System_Clock_Init();
@@ -221,6 +233,10 @@ int main(void){
 	GPIO_Init();
 	SPI_Init();
 	SysTick_Init();
+	I2C_GPIO_Init();
+	I2C_Initialization();
+	
+	I2C_SendData(I2C1, SlaveAddress2, Data_Start, 2);
 	
   // Initialize the display.
 	ili9341_hspi_init();
@@ -238,15 +254,14 @@ int main(void){
 	
 	LCD_Screen(BLACK);
 	
+	
 	// Randomize Box
 	shuffle(box_color, 13);
 	DrawResource();
 	DrawWhiteBorder();
+	NodePointer();
+	
 	while(1) {
-		if (MODE == 1) {
-			NodePointer();
-		} else if (MODE == 2) {
-			BridgePointer();
-		}
+
 	}
 }
