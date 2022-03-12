@@ -254,7 +254,6 @@ int main(void){
 	
 	LCD_Screen(BLACK);
 	
-	
 	// Randomize Box
 	shuffle(box_color, 13);
 	DrawResource();

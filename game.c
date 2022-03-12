@@ -32,6 +32,8 @@ uint8_t direction;
 
 /*Modes {Node = 1, Bridge = 2}*/ 
 int MODE = 1;
+
+/*Turn {Player 1 = 1, Player 2 = 2}*/ 
 int TURN = 1;
 
 /*Pointers*/
@@ -284,7 +286,7 @@ void BridgePointer() {
 }
 
 void JoystickHandler(uint8_t direction[]) {
-	if (direction[5] == SWITCH) {
+	if (direction[5] == MODE) {
 		MODE = (MODE%2)+1;
 		if (MODE == 1) {
 			BridgePointerClear();
@@ -437,10 +439,10 @@ void JoystickHandler(uint8_t direction[]) {
 			} else {
 				BridgePointerClear();
 				BridgePointX++;
-				BridgePointer();
+				BridgePointer(); 
 			}
 		}
-	} else if (direction[5] == MODE) {
+	} else if (direction[5] == SWITCH) {
 		NodePointerClear();
 		//ScoreHandler();
 		TURN = (TURN%2)+1;
