@@ -22,7 +22,7 @@ extern uint8_t DARKGREEN;
 extern uint8_t GREEN;
 extern uint8_t YELLOW;
 
-#define NODE 			0x01
+#define NBMODE 			0x01
 #define BRIDGE 		2
 #define DIRECT		0x80
 #define SWITCH		7
@@ -365,7 +365,7 @@ void BridgePointer() {
 }
 
 void JoystickHandler(uint8_t direction[]) {
-	if (direction[5] == MODE) {
+	if (direction[5] == NBMODE) {
 		MODE = (MODE%2)+1;
 		if (MODE == 1) {
 			BridgePointerClear();

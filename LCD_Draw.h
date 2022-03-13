@@ -12,6 +12,6 @@ void LCD_VLine(int X, int Y, int length, uint8_t color);
 void LCD_Rect(int XStart, int XFinish, int YStart, int YFinish, uint8_t color);
 void LCD_FillRect(int XStart, int XFinish, int YStart, int YFinish, uint8_t color);
 void LCD_Circle(int X, int Y, int radius, uint8_t color);
-void LCD_DrawNumTitle(int X, int Y, int Length, int Height, int num, uint8_t color);
+void LCD_DrawNumTitle(int X, int Y, int Length, int Height, int WidthLine, int num, uint8_t color);
 
 #endif

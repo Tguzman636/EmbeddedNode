@@ -259,23 +259,53 @@ void ScoreBoard() {
 	LCD_Rect(107, 113, 39, 45, WHITE);
 	// {Space}
 	// 10th for Player 1
-	LCD_DrawNumTitle(140, 10, 20, 40, 0, RED);
+	LCD_DrawNumTitle(140, 10, 20, 40, 4, 0, RED);
 	// 1th for Player 1
-	LCD_DrawNumTitle(160, 10, 20, 40, 0, RED);
+	LCD_DrawNumTitle(160, 10, 20, 40, 4, 0, RED);
 	// :
 	LCD_Rect(187, 193, 15, 21, WHITE);
 	LCD_Rect(187, 193, 39, 45, WHITE);
 	// 10th for Player 2
-	LCD_DrawNumTitle(200, 10, 20, 40, 0, LIGHTBLUE);
+	LCD_DrawNumTitle(200, 10, 20, 40, 4, 0, LIGHTBLUE);
 	// 1th for Player 2
-	LCD_DrawNumTitle(220, 10, 20, 40, 0, LIGHTBLUE);
+	LCD_DrawNumTitle(220, 10, 20, 40, 4, 0, LIGHTBLUE);
 }	
 
 void ResourceBoard() {
-	LCD_HLine(0, 260, 240, WHITE);
-	LCD_HLine(0, 264, 240, WHITE);
-	LCD_VLine(117, 260, 69, WHITE);
-	LCD_VLine(121, 260, 69, WHITE);
+	int RightPixel = 70;
+	int LeftPixel = 15;
+	int height = 20;
+	int length = 14;
+	int thickness = 2;
+	LCD_HLine(0, 259, 240, WHITE);
+	LCD_HLine(0, 263, 240, WHITE);
+	LCD_VLine(117, 259, 70, WHITE);
+	LCD_VLine(121, 259, 70, WHITE);
+	LCD_VLine(55, 259, 70, WHITE);
+	LCD_VLine(185, 259, 70, WHITE);
+	LCD_DrawNumTitle(10+LeftPixel, 270, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+LeftPixel+length, 270, length, height, thickness, 8, RED);
+	
+	LCD_DrawNumTitle(10+LeftPixel, 295, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+LeftPixel+length, 295, length, height, thickness, 8, RED);
+	
+	LCD_DrawNumTitle(10+RightPixel, 270, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+RightPixel+length, 270, length, height, thickness, 8, RED);
+	
+	LCD_DrawNumTitle(10+RightPixel, 295, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+RightPixel+length, 295, length, height, thickness, 8, RED);
+	
+	LCD_DrawNumTitle(140+LeftPixel, 270, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+LeftPixel+length, 270, length, height, thickness, 8, LIGHTBLUE);
+	
+	LCD_DrawNumTitle(140+LeftPixel, 295, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+LeftPixel+length, 295, length, height, thickness, 8, LIGHTBLUE);
+	
+	LCD_DrawNumTitle(140+RightPixel, 270, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+RightPixel+length, 270, length, height, thickness, 8, LIGHTBLUE);
+	
+	LCD_DrawNumTitle(140+RightPixel, 295, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+RightPixel+length, 295, length, height, thickness, 8, LIGHTBLUE);
 }
 int main(void){
 	// Clock Setup
@@ -317,8 +347,8 @@ int main(void){
 	ResourceBoard();
 	while(1) {
 		for (int i=0; i<10; i++) {
-			LCD_DrawNumTitle(140, 10, 20, 40, 10, BLACK);
-			LCD_DrawNumTitle(140, 10, 20, 40, i, RED);
+			LCD_DrawNumTitle(140, 10, 20, 40, 4, 10, BLACK);
+			LCD_DrawNumTitle(140, 10, 20, 40, 4, i, RED);
 			delay(1000);
 		}
 	}

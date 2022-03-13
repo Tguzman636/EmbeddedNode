@@ -20,9 +20,8 @@ void LCD_Screen(uint8_t color) {
 	Refresh();
 }
 
-void LCD_DrawNumTitle(int X, int Y, int Length, int Height, int num, uint8_t color) {
+void LCD_DrawNumTitle(int X, int Y, int Length, int Height, int WidthLine, int num, uint8_t color) {
 	int Padding = 2;
-	int WidthLine = 4;
 	if (num == 0) {
 		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
 		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
