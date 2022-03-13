@@ -1,25 +1,26 @@
 no trading system (DONE)
 place anywhere (DONE)
 
-completed boxes = (DONE)
+completed boxes = (DONE) (NEEDS TESTING)
 Only player who claims gets resource
 
-Cost (DONE)
+Cost (DONE) (NEEDS TESTING)
 Node = x3 Green/x3 Yellow
 Bridge = x1 Blue/x1 Red
 
-Scoring (First to 15) (IP)
+Scoring (First to 15) (DONE) (NEEDS TESTING)
 Node +1
 Captured +3
 Most Bridges +2
+	Winning Screen (IP)
 
-Gather Resource (FIX)
+Gather Resource (DONE) (NEEDS TESTING)
 
-Display Resource count/Score (Implement)
+Display Resource count/Score (IP)
 
-RNG (Fix)
+RNG (NEEDS FIX)
 
-Text display 
+Text display (IP)
 
 Extra:
 Fix Bridge movements

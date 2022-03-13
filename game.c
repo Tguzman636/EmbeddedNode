@@ -133,10 +133,17 @@ void ScoreHandler() {
 	for (int i=0; i<7;i++) {
 		for (int j=0;j<7;j++) {
 			if (resourceavailable[i][j].owner==1) {
-				Score[0]++;
+				Score[0]+=3;
 			} else if (resourceavailable[i][j].owner==2) {
-				Score[1]++;
+				Score[1]+=3;
 			}
+		}
+	}
+	if (Score[0] == 15 | Score[1] == 15) {
+		if (Score[0] == 15) {
+			// Player1 Winning Screen
+		} else {
+			// Player2 Winning Screen
 		}
 	}
 }
