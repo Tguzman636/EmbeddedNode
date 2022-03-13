@@ -20,6 +20,73 @@ void LCD_Screen(uint8_t color) {
 	Refresh();
 }
 
+void LCD_DrawNumTitle(int X, int Y, int Length, int Height, int num, uint8_t color) {
+	int Padding = 2;
+	int WidthLine = 4;
+	if (num == 0) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+Height-WidthLine, Y+Height, color);
+	} else if (num == 1) {
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+	} else if (num == 2) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+(Height/2)-(WidthLine/2), Y+(Height/2)+(WidthLine/2), color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+Height-WidthLine, Y+Height, color);
+	} else if (num == 3) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+(Height/2)-(WidthLine/2), Y+(Height/2)+(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+Height-WidthLine, Y+Height, color);
+	} else if (num == 4) {
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+(Height/2)-(WidthLine/2), Y+(Height/2)+(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+	} else if (num == 5) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+(Height/2)-(WidthLine/2), Y+(Height/2)+(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+Height-WidthLine, Y+Height, color);
+	} else if (num == 6) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+(Height/2)-(WidthLine/2), Y+(Height/2)+(WidthLine/2), color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+Height-WidthLine, Y+Height, color);
+	} else if (num == 7) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+	} else if (num == 8) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+(Height/2)-(WidthLine/2), Y+(Height/2)+(WidthLine/2), color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+Height-WidthLine, Y+Height, color);
+	} else if (num == 9) {
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y, Y+WidthLine, color);
+		LCD_Rect(X+Padding, X+Padding+WidthLine, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+WidthLine, Y+(Height/2)-(WidthLine/2), color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+(Height/2)-(WidthLine/2), Y+(Height/2)+(WidthLine/2), color);
+		LCD_Rect(X+Length-Padding-WidthLine, X+Length-Padding, Y+(Height/2)+(WidthLine/2), Y+Height-WidthLine, color);
+		LCD_Rect(X+Padding+WidthLine, X+Length-Padding-WidthLine, Y+Height-WidthLine, Y+Height, color);
+	} else if (num == 10) {
+		LCD_FillRect(X, X+Length, Y, Y+Height, color);
+	}
+}
+
 void LCD_HLine(int X, int Y, int length, uint8_t color) {
 	int Pixel_Start = X + Y*WIDTH;
 	for (int i = Pixel_Start; i<Pixel_Start+length; i++) {

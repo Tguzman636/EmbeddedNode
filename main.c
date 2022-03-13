@@ -31,6 +31,8 @@ extern int Player2Res[4];
 
 extern int Score[2];
 
+int Debug = 1;
+
 uint8_t SlaveAddress1 = 0b10100101;
 uint8_t SlaveAddress2 = 0b10100100;
 uint8_t Data_Receive[6] = {0, 0, 0, 0, 0, 0};
@@ -225,6 +227,56 @@ void DrawWhiteBorder() {
 	}
 }
 
+void ScoreBoard() {
+	// S
+	LCD_Rect(2, 18, 10, 14, WHITE);
+	LCD_Rect(2, 6, 10, 30, WHITE);
+	LCD_Rect(2, 18, 28, 32, WHITE);
+	LCD_Rect(14, 18, 30, 50, WHITE);
+	LCD_Rect(2, 18, 46, 50, WHITE);
+	// C
+	LCD_Rect(22, 38, 10, 14, WHITE);
+	LCD_Rect(22, 26, 10, 50, WHITE);
+	LCD_Rect(22, 38, 46, 50, WHITE);
+	// O
+	LCD_Rect(42, 46, 10, 50, WHITE);
+	LCD_Rect(54, 58, 10, 50, WHITE);
+	LCD_Rect(42, 58, 10, 14, WHITE);
+	LCD_Rect(42, 58, 46, 50, WHITE);
+	// R
+	LCD_Rect(62, 66, 10, 50, WHITE);
+	LCD_Rect(62, 74, 10, 14, WHITE);
+	LCD_Rect(62, 74, 28, 32, WHITE);
+	LCD_Rect(74, 78, 15, 27, WHITE);
+	LCD_Rect(74, 78, 33, 50, WHITE);
+	// E
+	LCD_Rect(82, 86, 10, 50, WHITE);
+	LCD_Rect(82, 98, 10, 14, WHITE);
+	LCD_Rect(82, 98, 28, 32, WHITE);
+	LCD_Rect(82, 98, 46, 50, WHITE);
+	// :
+	LCD_Rect(107, 113, 15, 21, WHITE);
+	LCD_Rect(107, 113, 39, 45, WHITE);
+	// {Space}
+	// 10th for Player 1
+	LCD_DrawNumTitle(140, 10, 20, 40, 0, RED);
+	// 1th for Player 1
+	LCD_DrawNumTitle(160, 10, 20, 40, 0, RED);
+	// :
+	LCD_Rect(187, 193, 15, 21, WHITE);
+	LCD_Rect(187, 193, 39, 45, WHITE);
+	// 10th for Player 2
+	LCD_DrawNumTitle(200, 10, 20, 40, 0, LIGHTBLUE);
+	// 1th for Player 2
+	LCD_DrawNumTitle(220, 10, 20, 40, 0, LIGHTBLUE);
+}	
+
+void ResourceBoard() {
+	LCD_HLine(0, 260, 240, WHITE);
+	LCD_HLine(0, 264, 240, WHITE);
+	LCD_VLine(117, 260, 69, WHITE);
+	LCD_VLine(121, 260, 69, WHITE);
+}
 int main(void){
 	// Clock Setup
 	System_Clock_Init();
@@ -233,10 +285,12 @@ int main(void){
 	GPIO_Init();
 	SPI_Init();
 	SysTick_Init();
-	I2C_GPIO_Init();
-	I2C_Initialization();
 	
-	I2C_SendData(I2C1, SlaveAddress2, Data_Start, 2);
+	if (Debug != 1) {
+		I2C_GPIO_Init();
+		I2C_Initialization();
+		I2C_SendData(I2C1, SlaveAddress2, Data_Start, 2);
+	}
 	
   // Initialize the display.
 	ili9341_hspi_init();
@@ -259,8 +313,13 @@ int main(void){
 	DrawResource();
 	DrawWhiteBorder();
 	NodePointer();
-	
+	ScoreBoard();
+	ResourceBoard();
 	while(1) {
-
+		for (int i=0; i<10; i++) {
+			LCD_DrawNumTitle(140, 10, 20, 40, 10, BLACK);
+			LCD_DrawNumTitle(140, 10, 20, 40, i, RED);
+			delay(1000);
+		}
 	}
 }
