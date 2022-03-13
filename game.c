@@ -148,8 +148,7 @@ void GatherResource() {
 				if (node_owner[i][j] == 1) {
 					for (int x=0; x<2;x++) {
 						for (int y = 0; y<2;y++) {
-							if ((resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) |
-									(resourceavailable[i+x][j+y].owner==1)) {
+							if ((resourceavailable[i+x][j+y].owner != 2)) {
 								Player1Res[(resourceavailable[i+x][j+y].color)-1]++;
 							}
 						}
@@ -163,8 +162,7 @@ void GatherResource() {
 				if (node_owner[i][j] == 2) {
 					for (int x=0; x<2;x++) {
 						for (int y = 0; y<2;y++) {
-							if ((resourceavailable[i+x][j+y].NumOfNodes<=resourceavailable[i+x][j+y].dots) |
-									(resourceavailable[i+x][j+y].owner==2)) {
+							if ((resourceavailable[i+x][j+y].owner != 1)) {
 								Player2Res[(resourceavailable[i+x][j+y].color)-1]++;
 							}
 						}
@@ -217,12 +215,86 @@ void PurchaseNode() {
 	}
 }
 
-//void BoxCheck() {
-//	for (int i=0;i<4;i++) {
-//		if (node_owner[
-//			// Still Figuring this out
-//	}
-//}
+void BoxCheck() {
+	if ((bridge_owner[0][2] == TURN) &
+			(bridge_owner[2][2] == TURN) &
+			(bridge_owner[1][2] == TURN) &
+			(bridge_owner[1][3] == TURN)) {
+		resourceavailable[3][1].owner = TURN;
+	}
+	if ((bridge_owner[2][1] == TURN) &
+			(bridge_owner[3][1] == TURN) &
+			(bridge_owner[4][1] == TURN) &
+			(bridge_owner[3][2] == TURN)) {
+		resourceavailable[2][2].owner = TURN;
+	}
+	if ((bridge_owner[2][2] == TURN) &
+			(bridge_owner[3][2] == TURN) &
+			(bridge_owner[4][2] == TURN) &
+			(bridge_owner[3][3] == TURN)) {
+		resourceavailable[3][2].owner = TURN;
+	}
+	if ((bridge_owner[2][3] == TURN) &
+			(bridge_owner[3][3] == TURN) &
+			(bridge_owner[4][3] == TURN) &
+			(bridge_owner[3][4] == TURN)) {
+		resourceavailable[4][2].owner = TURN;
+	}
+	if ((bridge_owner[4][0] == TURN) &
+			(bridge_owner[5][0] == TURN) &
+			(bridge_owner[6][0] == TURN) &
+			(bridge_owner[5][1] == TURN)) {
+		resourceavailable[1][3].owner = TURN;
+	}
+	if ((bridge_owner[4][1] == TURN) &
+			(bridge_owner[5][1] == TURN) &
+			(bridge_owner[6][1] == TURN) &
+			(bridge_owner[5][2] == TURN)) {
+		resourceavailable[2][3].owner = TURN;
+	}
+	if ((bridge_owner[4][2] == TURN) &
+			(bridge_owner[5][2] == TURN) &
+			(bridge_owner[6][2] == TURN) &
+			(bridge_owner[5][3] == TURN)) {
+		resourceavailable[3][3].owner = TURN;
+	}
+	if ((bridge_owner[4][3] == TURN) &
+			(bridge_owner[5][3] == TURN) &
+			(bridge_owner[6][3] == TURN) &
+			(bridge_owner[5][4] == TURN)) {
+		resourceavailable[4][3].owner = TURN;
+	}
+	if ((bridge_owner[4][4] == TURN) &
+			(bridge_owner[5][4] == TURN) &
+			(bridge_owner[6][4] == TURN) &
+			(bridge_owner[5][5] == TURN)) {
+		resourceavailable[5][3].owner = TURN;
+	}
+	if ((bridge_owner[6][1] == TURN) &
+			(bridge_owner[7][1] == TURN) &
+			(bridge_owner[8][1] == TURN) &
+			(bridge_owner[7][2] == TURN)) {
+		resourceavailable[2][4].owner = TURN;
+	}
+	if ((bridge_owner[6][2] == TURN) &
+			(bridge_owner[7][2] == TURN) &
+			(bridge_owner[8][2] == TURN) &
+			(bridge_owner[7][3] == TURN)) {
+		resourceavailable[3][4].owner = TURN;
+	}
+	if ((bridge_owner[6][3] == TURN) &
+			(bridge_owner[7][3] == TURN) &
+			(bridge_owner[8][3] == TURN) &
+			(bridge_owner[7][4] == TURN)) {
+		resourceavailable[4][4].owner = TURN;
+	}
+	if ((bridge_owner[8][2] == TURN) &
+			(bridge_owner[9][2] == TURN) &
+			(bridge_owner[10][2] == TURN) &
+			(bridge_owner[9][3] == TURN)) {
+		resourceavailable[3][5].owner = TURN;
+	}
+}
 
 void PurchaseBridge() {
 	if (bridge_owner[BridgePointX][BridgePointY] == 0) {
@@ -239,7 +311,7 @@ void PurchaseBridge() {
 				Player2Res[1]--;
 			}
 		}
-		//BoxCheck();
+		BoxCheck();
 	}
 }
 

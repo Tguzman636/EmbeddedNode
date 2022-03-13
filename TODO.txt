@@ -1,7 +1,7 @@
 no trading system (DONE)
 place anywhere (DONE)
 
-completed boxes = (IP)
+completed boxes = (DONE)
 Only player who claims gets resource
 
 Cost (DONE)
