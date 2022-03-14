@@ -2,7 +2,7 @@ no trading system (DONE)
 place anywhere (DONE)
 
 completed boxes = (DONE) (NEEDS TESTING)
-Only player who claims gets resource
+Only player who claims gets resource (DONE) (NEEDS TESTING)
 
 Cost (DONE) (NEEDS TESTING)
 Node = x3 Green/x3 Yellow
@@ -12,15 +12,19 @@ Scoring (First to 15) (DONE) (NEEDS TESTING)
 Node +1
 Captured +3
 Most Bridges +2
-	Winning Screen (IP)
+	Winning Screen (NEED)
 
 Gather Resource (DONE) (NEEDS TESTING)
 
-Display Resource count/Score (IP)
+Display Resource count/Score (DONE NEEDS TESTING)
 
 RNG (NEEDS FIX)
 
-Text display (IP)
+Text display (DONE)
+
+INITIAL START (NEED)
+
+Bridge = Needs padding so it doesnt cover black box
 
 Extra:
 Fix Bridge movements

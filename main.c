@@ -60,6 +60,8 @@ uint8_t LIGHTGREEN = 165;
 uint8_t DARKGREEN = 20;
 uint8_t GREEN = 20;
 uint8_t YELLOW = 248;
+uint8_t ORANGE = 240;
+uint8_t PURPLE = 130;
 
 void shuffle(int *array, int n) {
 	srand(600);
@@ -259,16 +261,16 @@ void ScoreBoard() {
 	LCD_Rect(107, 113, 39, 45, WHITE);
 	// {Space}
 	// 10th for Player 1
-	LCD_DrawNumTitle(140, 10, 20, 40, 4, 0, RED);
+	LCD_DrawNumTitle(140, 10, 20, 40, 4, 0, ORANGE);
 	// 1th for Player 1
-	LCD_DrawNumTitle(160, 10, 20, 40, 4, 0, RED);
+	LCD_DrawNumTitle(160, 10, 20, 40, 4, 0, ORANGE);
 	// :
 	LCD_Rect(187, 193, 15, 21, WHITE);
 	LCD_Rect(187, 193, 39, 45, WHITE);
 	// 10th for Player 2
-	LCD_DrawNumTitle(200, 10, 20, 40, 4, 0, LIGHTBLUE);
+	LCD_DrawNumTitle(200, 10, 20, 40, 4, 0, PURPLE);
 	// 1th for Player 2
-	LCD_DrawNumTitle(220, 10, 20, 40, 4, 0, LIGHTBLUE);
+	LCD_DrawNumTitle(220, 10, 20, 40, 4, 0, PURPLE);
 }	
 
 void ResourceBoard() {
@@ -283,30 +285,39 @@ void ResourceBoard() {
 	LCD_VLine(121, 259, 70, WHITE);
 	LCD_VLine(55, 259, 70, WHITE);
 	LCD_VLine(185, 259, 70, WHITE);
-	LCD_DrawNumTitle(10+LeftPixel, 270, length, height, thickness, 8, RED);
-	LCD_DrawNumTitle(10+LeftPixel+length, 270, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+LeftPixel, 270, length, height, thickness, 0, ORANGE);
+	LCD_DrawNumTitle(10+LeftPixel+length, 270, length, height, thickness, 0, ORANGE);
+	LCD_FillRect(LeftPixel-7, LeftPixel+2, 275, 285, RED);
 	
-	LCD_DrawNumTitle(10+LeftPixel, 295, length, height, thickness, 8, RED);
-	LCD_DrawNumTitle(10+LeftPixel+length, 295, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+LeftPixel, 295, length, height, thickness, 0, ORANGE);
+	LCD_DrawNumTitle(10+LeftPixel+length, 295, length, height, thickness, 0, ORANGE);
+	LCD_FillRect(LeftPixel-7, LeftPixel+2, 300, 310, BLUE);
 	
-	LCD_DrawNumTitle(10+RightPixel, 270, length, height, thickness, 8, RED);
-	LCD_DrawNumTitle(10+RightPixel+length, 270, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+RightPixel, 270, length, height, thickness, 0, ORANGE);
+	LCD_DrawNumTitle(10+RightPixel+length, 270, length, height, thickness, 0, ORANGE);
+	LCD_FillRect(RightPixel-7, RightPixel+2, 275, 285, YELLOW);
 	
-	LCD_DrawNumTitle(10+RightPixel, 295, length, height, thickness, 8, RED);
-	LCD_DrawNumTitle(10+RightPixel+length, 295, length, height, thickness, 8, RED);
+	LCD_DrawNumTitle(10+RightPixel, 295, length, height, thickness, 0, ORANGE);
+	LCD_DrawNumTitle(10+RightPixel+length, 295, length, height, thickness, 0, ORANGE);
+	LCD_FillRect(RightPixel-7, RightPixel+2, 300, 310, GREEN);
 	
-	LCD_DrawNumTitle(140+LeftPixel, 270, length, height, thickness, 8, LIGHTBLUE);
-	LCD_DrawNumTitle(140+LeftPixel+length, 270, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+LeftPixel, 270, length, height, thickness, 0, PURPLE);
+	LCD_DrawNumTitle(140+LeftPixel+length, 270, length, height, thickness, 0, PURPLE);
+	LCD_FillRect(LeftPixel+123, LeftPixel+133, 275, 285, RED);
 	
-	LCD_DrawNumTitle(140+LeftPixel, 295, length, height, thickness, 8, LIGHTBLUE);
-	LCD_DrawNumTitle(140+LeftPixel+length, 295, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+LeftPixel, 295, length, height, thickness, 0, PURPLE);
+	LCD_DrawNumTitle(140+LeftPixel+length, 295, length, height, thickness, 0, PURPLE);
+	LCD_FillRect(LeftPixel+123, LeftPixel+133, 300, 310, BLUE);
 	
-	LCD_DrawNumTitle(140+RightPixel, 270, length, height, thickness, 8, LIGHTBLUE);
-	LCD_DrawNumTitle(140+RightPixel+length, 270, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+RightPixel, 270, length, height, thickness, 0, PURPLE);
+	LCD_DrawNumTitle(140+RightPixel+length, 270, length, height, thickness, 0, PURPLE);
+	LCD_FillRect(RightPixel+123, RightPixel+133, 275, 285, YELLOW);
 	
-	LCD_DrawNumTitle(140+RightPixel, 295, length, height, thickness, 8, LIGHTBLUE);
-	LCD_DrawNumTitle(140+RightPixel+length, 295, length, height, thickness, 8, LIGHTBLUE);
+	LCD_DrawNumTitle(140+RightPixel, 295, length, height, thickness, 0, PURPLE);
+	LCD_DrawNumTitle(140+RightPixel+length, 295, length, height, thickness, 0, PURPLE);
+	LCD_FillRect(RightPixel+123, RightPixel+133, 300, 310, GREEN);
 }
+
 int main(void){
 	// Clock Setup
 	System_Clock_Init();
@@ -345,11 +356,8 @@ int main(void){
 	NodePointer();
 	ScoreBoard();
 	ResourceBoard();
+	delay(500); 
+	RefreshResourceBoard();
 	while(1) {
-		for (int i=0; i<10; i++) {
-			LCD_DrawNumTitle(140, 10, 20, 40, 4, 10, BLACK);
-			LCD_DrawNumTitle(140, 10, 20, 40, 4, i, RED);
-			delay(1000);
-		}
 	}
 }

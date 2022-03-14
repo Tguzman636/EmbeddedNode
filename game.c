@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "game.h"
 
@@ -21,6 +22,8 @@ extern uint8_t LIGHTGREEN;
 extern uint8_t DARKGREEN;
 extern uint8_t GREEN;
 extern uint8_t YELLOW;
+extern uint8_t ORANGE;
+extern uint8_t PURPLE;
 
 #define NBMODE 			0x01
 #define BRIDGE 		2
@@ -51,7 +54,7 @@ int node_owner[6][6]={0};
 int bridge_owner[11][6]={0};
 
 /*ResourceTracker Red/Blue/Yellow/Green */
-int Player1Res[4] = {0,0,20,20};
+int Player1Res[4] = {01,23,45,69};
 int Player2Res[4] = {0,0,4,4};
 
 /*Score Tracker*/
@@ -139,12 +142,51 @@ void ScoreHandler() {
 			}
 		}
 	}
+	LCD_DrawNumTitle(140, 10, 20, 40, 4, 10, BLACK);
+	LCD_DrawNumTitle(160, 10, 20, 40, 4, 10, BLACK);
+	LCD_DrawNumTitle(200, 10, 20, 40, 4, 10, BLACK);
+	LCD_DrawNumTitle(220, 10, 20, 40, 4, 10, BLACK);
+	LCD_DrawNumTitle(140, 10, 20, 40, 4, floor(Score[0]/10), ORANGE);
+	LCD_DrawNumTitle(160, 10, 20, 40, 4, Score[0]%10, ORANGE);
+	LCD_DrawNumTitle(200, 10, 20, 40, 4, floor(Score[1]/10), PURPLE);
+	LCD_DrawNumTitle(220, 10, 20, 40, 4, Score[1]%10, PURPLE);
 	if (Score[0] == 15 | Score[1] == 15) {
 		if (Score[0] == 15) {
 			// Player1 Winning Screen
 		} else {
 			// Player2 Winning Screen
 		}
+	}
+}
+
+void RefreshResourceBoard() {
+	int thickness = 2;
+	int RightPixel = 70;
+	int LeftPixel = 15;
+	int height = 20;
+	int length = 14;
+	if (TURN == 1) {
+		LCD_DrawNumTitle(10+LeftPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
+		LCD_DrawNumTitle(10+RightPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
+		LCD_DrawNumTitle(10+LeftPixel, 270, length, height, thickness, floor(Player1Res[0]/10), ORANGE);
+		LCD_DrawNumTitle(10+LeftPixel+length, 270, length, height, thickness, Player1Res[0]%10, ORANGE);
+		LCD_DrawNumTitle(10+LeftPixel, 295, length, height, thickness, floor(Player1Res[1]/10), ORANGE);
+		LCD_DrawNumTitle(10+LeftPixel+length, 295, length, height, thickness, Player1Res[1]%10, ORANGE);
+		LCD_DrawNumTitle(10+RightPixel, 270, length, height, thickness, floor(Player1Res[2]/10), ORANGE);
+		LCD_DrawNumTitle(10+RightPixel+length, 270, length, height, thickness, Player1Res[2]%10, ORANGE);
+		LCD_DrawNumTitle(10+RightPixel, 295, length, height, thickness, floor(Player1Res[3]/10), ORANGE);
+		LCD_DrawNumTitle(10+RightPixel+length, 295, length, height, thickness, Player1Res[3]%10, ORANGE);
+	} else if (TURN == 2) {
+		LCD_DrawNumTitle(140+LeftPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
+		LCD_DrawNumTitle(140+RightPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
+		LCD_DrawNumTitle(140+LeftPixel, 270, length, height, thickness, floor(Player2Res[0]/10), PURPLE);
+		LCD_DrawNumTitle(140+LeftPixel+length, 270, length, height, thickness, Player2Res[0]%10, PURPLE);
+		LCD_DrawNumTitle(140+LeftPixel, 295, length, height, thickness, floor(Player2Res[1]/10), PURPLE);
+		LCD_DrawNumTitle(140+LeftPixel+length, 295, length, height, thickness, Player2Res[1]%10, PURPLE);
+		LCD_DrawNumTitle(140+RightPixel, 270, length, height, thickness, floor(Player2Res[2]/10), PURPLE);
+		LCD_DrawNumTitle(140+RightPixel+length, 270, length, height, thickness, Player2Res[2]%10, PURPLE);
+		LCD_DrawNumTitle(140+RightPixel, 295, length, height, thickness, floor(Player2Res[3]/10), PURPLE);
+		LCD_DrawNumTitle(140+RightPixel+length, 295, length, height, thickness, Player2Res[3]%10, PURPLE);
 	}
 }
 
@@ -178,6 +220,7 @@ void GatherResource() {
 			}
 		}
 	}
+	RefreshResourceBoard();
 }
 
 void PurchaseNode() {
@@ -194,7 +237,7 @@ void PurchaseNode() {
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
 							NodeCoord[NodePointX][NodePointY].Y,
 							10,
-							RED);
+							ORANGE);
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X+2,
 							NodeCoord[NodePointX][NodePointY].Y+2,
 							6,
@@ -212,13 +255,14 @@ void PurchaseNode() {
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
 							NodeCoord[NodePointX][NodePointY].Y,
 							10,
-							LIGHTBLUE);
+							PURPLE);
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X+2,
 							NodeCoord[NodePointX][NodePointY].Y+2,
 							6,
 							DARKGREEN);
 			}
 		}
+		RefreshResourceBoard();
 	}
 }
 
@@ -319,6 +363,7 @@ void PurchaseBridge() {
 			}
 		}
 		BoxCheck();
+		RefreshResourceBoard();
 	}
 }
 
@@ -333,12 +378,12 @@ void NodePointerClear() {
 		LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
 								NodeCoord[NodePointX][NodePointY].Y,
 								10,
-								RED);
+								ORANGE);
 	} else if (node_owner[NodePointX][NodePointY] == 2) {
 		LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
 								NodeCoord[NodePointX][NodePointY].Y,
 								10,
-								LIGHTBLUE);
+								PURPLE);
 	}
 }
 
@@ -350,11 +395,26 @@ void NodePointer() {
 }
 
 void BridgePointerClear() {
-	LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
+	if ((bridge_owner[BridgePointY][BridgePointX] != 1) &&
+			(bridge_owner[BridgePointY][BridgePointX] != 2)) {
+		LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
 								BridgeCoord[BridgePointY][BridgePointX].XF,
 								BridgeCoord[BridgePointY][BridgePointX].YS,
 								BridgeCoord[BridgePointY][BridgePointX].YF,
 								WHITE);
+	} else if (bridge_owner[BridgePointY][BridgePointX] == 1) {
+		LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
+								BridgeCoord[BridgePointY][BridgePointX].XF,
+								BridgeCoord[BridgePointY][BridgePointX].YS,
+								BridgeCoord[BridgePointY][BridgePointX].YF,
+								ORANGE);
+	} else if (bridge_owner[BridgePointY][BridgePointX] == 2) {
+		LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
+								BridgeCoord[BridgePointY][BridgePointX].XF,
+								BridgeCoord[BridgePointY][BridgePointX].YS,
+								BridgeCoord[BridgePointY][BridgePointX].YF,
+								PURPLE);
+	}
 }
 void BridgePointer() {
 	LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
