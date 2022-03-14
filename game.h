@@ -6,3 +6,4 @@
 void JoystickHandler(uint8_t Data[]);
 void NodePointer();
 void RefreshResourceBoard();
+void initialize_arrays();

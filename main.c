@@ -32,6 +32,7 @@ extern int Player2Res[4];
 extern int Score[2];
 
 int Debug = 1;
+int DebugAction = 0;
 
 uint8_t SlaveAddress1 = 0b10100101;
 uint8_t SlaveAddress2 = 0b10100100;
@@ -57,7 +58,7 @@ uint8_t RED = 224;
 uint8_t LIGHTBLUE = 215;
 uint8_t BLUE = 35;
 uint8_t LIGHTGREEN = 165;
-uint8_t DARKGREEN = 20;
+uint8_t DARKGREEN = 246;
 uint8_t GREEN = 20;
 uint8_t YELLOW = 248;
 uint8_t ORANGE = 240;
@@ -175,35 +176,35 @@ void DrawResource() {
 		}
 	}
 	LCD_FillRect(103,138,71,106,colorArray[0]);
-	DrawCircles(103,138,71,106,box_count[0]);
+	//DrawCircles(103,138,71,106,box_count[0]);
 	
 	LCD_FillRect(67,102,107,142,colorArray[1]);
-	DrawCircles(67,102,107,142,box_count[1]);
+	//DrawCircles(67,102,107,142,box_count[1]);
 	LCD_FillRect(103,138,107,142,colorArray[2]);
-	DrawCircles(103,138,107,142,box_count[2]);
+	//DrawCircles(103,138,107,142,box_count[2]);
 	LCD_FillRect(139,174,107,142,colorArray[3]);
-	DrawCircles(139,174,107,142,box_count[3]);
+	//DrawCircles(139,174,107,142,box_count[3]);
 	
 	LCD_FillRect(31,66,143,178,colorArray[4]);
-	DrawCircles(31,66,143,178,box_count[4]);
+	//DrawCircles(31,66,143,178,box_count[4]);
 	LCD_FillRect(67,102,143,178,colorArray[5]);
-	DrawCircles(67,102,143,178,box_count[5]);
+	//DrawCircles(67,102,143,178,box_count[5]);
 	LCD_FillRect(103,138,143,178,colorArray[6]);
-	DrawCircles(103,138,143,178,box_count[6]);
+	//DrawCircles(103,138,143,178,box_count[6]);
 	LCD_FillRect(139,174,143,178,colorArray[7]);
-	DrawCircles(139,174,143,178,box_count[7]);
+	//DrawCircles(139,174,143,178,box_count[7]);
 	LCD_FillRect(175,210,143,178,colorArray[8]);
-	DrawCircles(175,210,143,178,box_count[8]);
+	//DrawCircles(175,210,143,178,box_count[8]);
 	
 	LCD_FillRect(67,102,179,214,colorArray[9]);
-	DrawCircles(67,102,179,214,box_count[9]);
+	//DrawCircles(67,102,179,214,box_count[9]);
 	LCD_FillRect(103,138,179,214,colorArray[10]);
-	DrawCircles(103,138,179,214,box_count[10]);
+	//DrawCircles(103,138,179,214,box_count[10]);
 	LCD_FillRect(139,174,179,214,colorArray[11]);
-	DrawCircles(139,174,179,214,box_count[11]);
+	//DrawCircles(139,174,179,214,box_count[11]);
 	
 	LCD_FillRect(103,138,215,250,colorArray[12]);
-	DrawCircles(103,138,215,250,box_count[12]);
+	//DrawCircles(103,138,215,250,box_count[12]);
 }
 
 void DrawWhiteBorder() {
@@ -285,36 +286,36 @@ void ResourceBoard() {
 	LCD_VLine(121, 259, 70, WHITE);
 	LCD_VLine(55, 259, 70, WHITE);
 	LCD_VLine(185, 259, 70, WHITE);
-	LCD_DrawNumTitle(10+LeftPixel, 270, length, height, thickness, 0, ORANGE);
-	LCD_DrawNumTitle(10+LeftPixel+length, 270, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+LeftPixel, 270, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+LeftPixel+length, 270, length, height, thickness, 0, ORANGE);
 	LCD_FillRect(LeftPixel-7, LeftPixel+2, 275, 285, RED);
 	
-	LCD_DrawNumTitle(10+LeftPixel, 295, length, height, thickness, 0, ORANGE);
-	LCD_DrawNumTitle(10+LeftPixel+length, 295, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+LeftPixel, 295, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+LeftPixel+length, 295, length, height, thickness, 0, ORANGE);
 	LCD_FillRect(LeftPixel-7, LeftPixel+2, 300, 310, BLUE);
 	
-	LCD_DrawNumTitle(10+RightPixel, 270, length, height, thickness, 0, ORANGE);
-	LCD_DrawNumTitle(10+RightPixel+length, 270, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+RightPixel, 270, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+RightPixel+length, 270, length, height, thickness, 0, ORANGE);
 	LCD_FillRect(RightPixel-7, RightPixel+2, 275, 285, YELLOW);
 	
-	LCD_DrawNumTitle(10+RightPixel, 295, length, height, thickness, 0, ORANGE);
-	LCD_DrawNumTitle(10+RightPixel+length, 295, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+RightPixel, 295, length, height, thickness, 0, ORANGE);
+	//LCD_DrawNumTitle(10+RightPixel+length, 295, length, height, thickness, 0, ORANGE);
 	LCD_FillRect(RightPixel-7, RightPixel+2, 300, 310, GREEN);
 	
-	LCD_DrawNumTitle(140+LeftPixel, 270, length, height, thickness, 0, PURPLE);
-	LCD_DrawNumTitle(140+LeftPixel+length, 270, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+LeftPixel, 270, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+LeftPixel+length, 270, length, height, thickness, 0, PURPLE);
 	LCD_FillRect(LeftPixel+123, LeftPixel+133, 275, 285, RED);
 	
-	LCD_DrawNumTitle(140+LeftPixel, 295, length, height, thickness, 0, PURPLE);
-	LCD_DrawNumTitle(140+LeftPixel+length, 295, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+LeftPixel, 295, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+LeftPixel+length, 295, length, height, thickness, 0, PURPLE);
 	LCD_FillRect(LeftPixel+123, LeftPixel+133, 300, 310, BLUE);
 	
-	LCD_DrawNumTitle(140+RightPixel, 270, length, height, thickness, 0, PURPLE);
-	LCD_DrawNumTitle(140+RightPixel+length, 270, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+RightPixel, 270, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+RightPixel+length, 270, length, height, thickness, 0, PURPLE);
 	LCD_FillRect(RightPixel+123, RightPixel+133, 275, 285, YELLOW);
 	
-	LCD_DrawNumTitle(140+RightPixel, 295, length, height, thickness, 0, PURPLE);
-	LCD_DrawNumTitle(140+RightPixel+length, 295, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+RightPixel, 295, length, height, thickness, 0, PURPLE);
+	//LCD_DrawNumTitle(140+RightPixel+length, 295, length, height, thickness, 0, PURPLE);
 	LCD_FillRect(RightPixel+123, RightPixel+133, 300, 310, GREEN);
 }
 
@@ -356,8 +357,65 @@ int main(void){
 	NodePointer();
 	ScoreBoard();
 	ResourceBoard();
-	delay(500); 
 	RefreshResourceBoard();
+	TURN = 2;
+	RefreshResourceBoard();
+	TURN = 1;
+	initialize_arrays();
+	if (DebugAction == 1) {
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x79;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x79;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x81; Data_Receive[1] = 0x80;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x02;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x79; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x01;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x79; Data_Receive[5] = 0x00;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x79; Data_Receive[5] = 0x00;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x79; Data_Receive[5] = 0x00;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x81; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x02;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x07;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x07;
+		JoystickHandler(Data_Receive);
+		Data_Receive[0] = 0x80; Data_Receive[1] = 0x80; Data_Receive[5] = 0x00;
+		delay(300);
+	}
 	while(1) {
 	}
 }

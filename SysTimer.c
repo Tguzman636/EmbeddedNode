@@ -20,6 +20,7 @@ extern uint8_t Data_Receive[6];
 extern uint8_t Data_Start[2];
 extern uint8_t Data_Conversion;
 extern int Debug;
+extern int LOCK;
 
 
 //******************************************************************************************
@@ -60,7 +61,7 @@ void SysTick_Init(void){
 void SysTick_Handler(void){
 	msTicks++;
 	joystick++;
-	if (joystick == 200 && Debug != 1) {
+	if (joystick > 200 && Debug != 1 && LOCK == 0) {
 		Data_Conversion = 0;
 		// Conversion Command
 		I2C_SendData(I2C1, SlaveAddress2, &Data_Conversion, 1);

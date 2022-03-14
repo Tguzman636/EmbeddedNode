@@ -25,10 +25,9 @@ extern uint8_t YELLOW;
 extern uint8_t ORANGE;
 extern uint8_t PURPLE;
 
-#define NBMODE 			0x01
-#define BRIDGE 		2
+#define NBMODE 		0x01
 #define DIRECT		0x80
-#define SWITCH		7
+#define SWITCH		0x07
 #define PURCHASE 	0x02
 
 uint8_t direction;
@@ -38,6 +37,8 @@ int MODE = 1;
 
 /*Turn {Player 1 = 1, Player 2 = 2}*/ 
 int TURN = 1;
+
+int LOCK = 0;
 
 /*Pointers*/
 int NodePointX = 2;
@@ -54,8 +55,8 @@ int node_owner[6][6]={0};
 int bridge_owner[11][6]={0};
 
 /*ResourceTracker Red/Blue/Yellow/Green */
-int Player1Res[4] = {01,23,45,69};
-int Player2Res[4] = {0,0,4,4};
+int Player1Res[4] = {2,2,6,6};
+int Player2Res[4] = {2,2,6,6};
 
 /*Score Tracker*/
 int Score[2] = {0}; //Player 1 : Player 2
@@ -99,46 +100,59 @@ struct ArrayCoords NodeCoord[6][6] = {
 };
 
 struct ArrayBridgeCoords BridgeCoord[11][6] = {	
-{{0,0,0,0},						{0,0,0,0},						{103, 138, 69, 72},		{0,0,0,0},						{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{0,0,0,0},						{101, 104, 73, 106},	{137, 140, 73, 106},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{67, 102, 105, 108}, 	{103, 138, 105, 108}, {139, 174, 105, 108},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{65, 68, 107, 142}, 	{101, 104, 107, 142}, {137, 140, 107, 142}, {173, 176, 107, 142},	{0,0,0,0}},
-{{31, 66, 141, 144}, 	{67, 102, 141, 144}, 	{103, 138, 141, 144}, {139, 174, 141, 144}, {175, 210, 141, 144},	{0,0,0,0}},
-{{29, 32, 143, 178}, 	{65, 68, 143, 178}, 	{101, 104, 143, 178}, {137, 140, 143, 178}, {173, 176, 143, 178}, {209, 212, 143, 178}},
-{{31, 66, 177, 180}, 	{67, 102, 177, 180}, 	{103, 138, 177, 180}, {139, 174, 177, 180}, {175, 210, 177, 180},	{0,0,0,0}},
-{{0,0,0,0},						{65, 68, 179, 214}, 	{101, 104, 179, 214}, {137, 140, 179, 214}, {173, 176, 179, 214},	{0,0,0,0}},
-{{0,0,0,0},						{67, 102, 213, 216}, 	{103, 138, 213, 216}, {139, 174, 213, 216},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{0,0,0,0},						{101, 104, 215, 250}, {137, 140, 215, 250},	{0,0,0,0},						{0,0,0,0}},
-{{0,0,0,0},						{0,0,0,0},						{103, 138, 249, 252},	{0,0,0,0},						{0,0,0,0},						{0,0,0,0}}																		
+{{0,0,0,0},						{0,0,0,0},						{109, 133, 69, 72},		{0,0,0,0},						{0,0,0,0},						{0,0,0,0}},						//H
+{{0,0,0,0},						{0,0,0,0},						{101, 104, 77, 101},	{137, 140, 77, 101},	{0,0,0,0},						{0,0,0,0}},						//V
+{{0,0,0,0},						{73, 97, 105, 108}, 	{109, 133, 105, 108}, {139, 174, 105, 108},	{0,0,0,0},						{0,0,0,0}},						//H
+{{0,0,0,0},						{65, 68, 113, 137}, 	{101, 104, 113, 137}, {137, 140, 113, 137}, {173, 176, 113, 137},	{0,0,0,0}},						//V
+{{37, 61, 141, 144}, 	{73, 97, 141, 144}, 	{109, 133, 147, 138}, {139, 174, 141, 144}, {181, 205, 141, 144},	{0,0,0,0}},						//H
+{{29, 32, 143, 179}, 	{65, 68, 143, 179}, 	{101, 104, 143, 179}, {137, 140, 143, 179}, {173, 176, 143, 179}, {209, 212, 143, 179}},//V
+{{37, 61, 177, 180}, 	{73, 97, 177, 180}, 	{109, 133, 183, 174}, {139, 174, 177, 180}, {181, 205, 177, 180},	{0,0,0,0}},						//H
+{{0,0,0,0},						{65, 68, 179, 215}, 	{101, 104, 179, 215}, {137, 140, 179, 215}, {173, 176, 179, 215},	{0,0,0,0}},						//V
+{{0,0,0,0},						{73, 97, 213, 216}, 	{109, 133, 219, 210}, {139, 174, 213, 216},	{0,0,0,0},						{0,0,0,0}},						//H
+{{0,0,0,0},						{0,0,0,0},						{101, 104, 215, 251}, {137, 140, 215, 251},	{0,0,0,0},						{0,0,0,0}},						//V
+{{0,0,0,0},						{0,0,0,0},						{109, 133, 255, 246},	{0,0,0,0},						{0,0,0,0},						{0,0,0,0}}						//H										
 };
 
+void initialize_arrays() {
+	for (int i = 0; i<6; i++) {
+		for (int j=0; j<6;j++) {
+			node_owner[i][j] = 0;
+		}
+	}
+	for (int i = 0; i<11; i++) {
+		for (int j=0; j<6;j++) {
+			bridge_owner[i][j] = 0;
+		}
+	}
+	for (int i = 0; i<7; i++) {
+		for (int j = 0; j < 7; j++) {
+			resourceavailable[i][j].NumOfNodes = 0;
+			resourceavailable[i][j].owner = 0;
+		}
+	}
+	resourceavailable[3][1].color = box_color[0];
+	resourceavailable[2][2].color = box_color[1];
+	resourceavailable[3][2].color = box_color[2];
+	resourceavailable[4][2].color = box_color[3];
+	resourceavailable[1][3].color = box_color[4];
+	resourceavailable[2][3].color = box_color[5];
+	resourceavailable[3][3].color = box_color[6];
+	resourceavailable[4][3].color = box_color[7];
+	resourceavailable[5][3].color = box_color[8];
+	resourceavailable[2][4].color = box_color[9];
+	resourceavailable[3][4].color = box_color[10];
+	resourceavailable[4][4].color = box_color[11];
+	resourceavailable[3][5].color = box_color[12];
+}
+
 void ScoreHandler() {
-	Score[0] = 0;
-	Score[1] = 0;
+	LOCK = 1;
 	for (int i=0; i<10; i++) {
 		for (int j=0; j<5; j++) {
 			if (bridge_owner[i][j] == 1) {
 				Score[0]+=2;
 			} else if (bridge_owner[i][j] == 2) {
 				Score[1]+=2;
-			}
-		}
-	}
-	for (int i = 0; i< 6; i++) {
-		for (int j=0;i<6;j++){
-			if (node_owner[i][j] == 1) {
-				Score[0]++;
-			} else if (node_owner[i][j] == 2) {
-				Score[1]++;
-			}
-		}
-	}
-	for (int i=0; i<7;i++) {
-		for (int j=0;j<7;j++) {
-			if (resourceavailable[i][j].owner==1) {
-				Score[0]+=3;
-			} else if (resourceavailable[i][j].owner==2) {
-				Score[1]+=3;
 			}
 		}
 	}
@@ -157,6 +171,7 @@ void ScoreHandler() {
 			// Player2 Winning Screen
 		}
 	}
+	LOCK = 0;
 }
 
 void RefreshResourceBoard() {
@@ -226,12 +241,8 @@ void GatherResource() {
 void PurchaseNode() {
 	if (node_owner[NodePointX][NodePointY] == 0) {
 		if (TURN == 1) {
-			if (Player1Res[2] >= 2 && Player1Res[3]>=2) {
+			if (Player1Res[2] >= 3 && Player1Res[3] >= 3) {
 				node_owner[NodePointX][NodePointY] = 1;
-				resourceavailable[NodePointX][NodePointY].NumOfNodes++;
-				resourceavailable[NodePointX+1][NodePointY+1].NumOfNodes++;
-				resourceavailable[NodePointX+1][NodePointY].NumOfNodes++;
-				resourceavailable[NodePointX][NodePointY+1].NumOfNodes++;
 				Player1Res[2]-=2;
 				Player1Res[3]-=2;
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
@@ -242,14 +253,11 @@ void PurchaseNode() {
 							NodeCoord[NodePointX][NodePointY].Y+2,
 							6,
 							DARKGREEN);
+				Score[0]++;
 			}
 		} else if (TURN == 2) {
-			if (Player2Res[2] >= 2 && Player2Res[3]>=2) {
+			if (Player2Res[2] >= 3 && Player2Res[3] >= 3) {
 				node_owner[NodePointX][NodePointY] = 2;
-				resourceavailable[NodePointX][NodePointY].NumOfNodes++;
-				resourceavailable[NodePointX+1][NodePointY+1].NumOfNodes++;
-				resourceavailable[NodePointX+1][NodePointY].NumOfNodes++;
-				resourceavailable[NodePointX][NodePointY+1].NumOfNodes++;
 				Player2Res[2]-=2;
 				Player2Res[3]-=2;
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
@@ -260,6 +268,7 @@ void PurchaseNode() {
 							NodeCoord[NodePointX][NodePointY].Y+2,
 							6,
 							DARKGREEN);
+				Score[1]++;
 			}
 		}
 		RefreshResourceBoard();
@@ -272,78 +281,91 @@ void BoxCheck() {
 			(bridge_owner[1][2] == TURN) &
 			(bridge_owner[1][3] == TURN)) {
 		resourceavailable[3][1].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[2][1] == TURN) &
 			(bridge_owner[3][1] == TURN) &
 			(bridge_owner[4][1] == TURN) &
 			(bridge_owner[3][2] == TURN)) {
 		resourceavailable[2][2].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[2][2] == TURN) &
 			(bridge_owner[3][2] == TURN) &
 			(bridge_owner[4][2] == TURN) &
 			(bridge_owner[3][3] == TURN)) {
 		resourceavailable[3][2].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[2][3] == TURN) &
 			(bridge_owner[3][3] == TURN) &
 			(bridge_owner[4][3] == TURN) &
 			(bridge_owner[3][4] == TURN)) {
 		resourceavailable[4][2].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][0] == TURN) &
 			(bridge_owner[5][0] == TURN) &
 			(bridge_owner[6][0] == TURN) &
 			(bridge_owner[5][1] == TURN)) {
 		resourceavailable[1][3].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][1] == TURN) &
 			(bridge_owner[5][1] == TURN) &
 			(bridge_owner[6][1] == TURN) &
 			(bridge_owner[5][2] == TURN)) {
 		resourceavailable[2][3].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][2] == TURN) &
 			(bridge_owner[5][2] == TURN) &
 			(bridge_owner[6][2] == TURN) &
 			(bridge_owner[5][3] == TURN)) {
 		resourceavailable[3][3].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][3] == TURN) &
 			(bridge_owner[5][3] == TURN) &
 			(bridge_owner[6][3] == TURN) &
 			(bridge_owner[5][4] == TURN)) {
 		resourceavailable[4][3].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][4] == TURN) &
 			(bridge_owner[5][4] == TURN) &
 			(bridge_owner[6][4] == TURN) &
 			(bridge_owner[5][5] == TURN)) {
 		resourceavailable[5][3].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[6][1] == TURN) &
 			(bridge_owner[7][1] == TURN) &
 			(bridge_owner[8][1] == TURN) &
 			(bridge_owner[7][2] == TURN)) {
 		resourceavailable[2][4].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[6][2] == TURN) &
 			(bridge_owner[7][2] == TURN) &
 			(bridge_owner[8][2] == TURN) &
 			(bridge_owner[7][3] == TURN)) {
 		resourceavailable[3][4].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[6][3] == TURN) &
 			(bridge_owner[7][3] == TURN) &
 			(bridge_owner[8][3] == TURN) &
 			(bridge_owner[7][4] == TURN)) {
 		resourceavailable[4][4].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[8][2] == TURN) &
 			(bridge_owner[9][2] == TURN) &
 			(bridge_owner[10][2] == TURN) &
 			(bridge_owner[9][3] == TURN)) {
 		resourceavailable[3][5].owner = TURN;
+		Score[TURN-1]+=3;
 	}
 }
 
@@ -355,12 +377,32 @@ void PurchaseBridge() {
 				Player1Res[0]--;
 				Player1Res[1]--;
 			}
+			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
+								BridgeCoord[BridgePointY][BridgePointX].XF,
+								BridgeCoord[BridgePointY][BridgePointX].YS,
+								BridgeCoord[BridgePointY][BridgePointX].YF,
+								ORANGE);
+			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS+1,
+								BridgeCoord[BridgePointY][BridgePointX].XF-1,
+								BridgeCoord[BridgePointY][BridgePointX].YS+1,
+								BridgeCoord[BridgePointY][BridgePointX].YF-1,
+								DARKGREEN);
 		} else if (TURN == 2) {
 			if (Player2Res[0] >= 1 && Player2Res[3]>=1) {
 				bridge_owner[BridgePointX][BridgePointY] = 2;
 				Player2Res[0]--;
 				Player2Res[1]--;
 			}
+			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
+								BridgeCoord[BridgePointY][BridgePointX].XF,
+								BridgeCoord[BridgePointY][BridgePointX].YS,
+								BridgeCoord[BridgePointY][BridgePointX].YF,
+								PURPLE);
+			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS+1,
+								BridgeCoord[BridgePointY][BridgePointX].XF-1,
+								BridgeCoord[BridgePointY][BridgePointX].YS+1,
+								BridgeCoord[BridgePointY][BridgePointX].YF-1,
+								DARKGREEN);
 		}
 		BoxCheck();
 		RefreshResourceBoard();
@@ -417,10 +459,10 @@ void BridgePointerClear() {
 	}
 }
 void BridgePointer() {
-	LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
-								BridgeCoord[BridgePointY][BridgePointX].XF,
-								BridgeCoord[BridgePointY][BridgePointX].YS,
-								BridgeCoord[BridgePointY][BridgePointX].YF,
+	LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS+1,
+								BridgeCoord[BridgePointY][BridgePointX].XF-1,
+								BridgeCoord[BridgePointY][BridgePointX].YS+1,
+								BridgeCoord[BridgePointY][BridgePointX].YF-1,
 								DARKGREEN);
 }
 
@@ -434,7 +476,7 @@ void JoystickHandler(uint8_t direction[]) {
 			NodePointerClear();
 			BridgePointer();
 		}
-	} else if ((direction[1] > DIRECT) && (direction[0] == DIRECT)) {
+	} else if ((direction[1] > DIRECT) && (direction[0] == DIRECT)) { // Up
 		if (MODE == 1) {
 			if ((NodePointY==2 && (NodePointX==0 | NodePointX==5)) |
 					(NodePointY==1 && (NodePointX==1 | NodePointX==4)) |
@@ -470,7 +512,7 @@ void JoystickHandler(uint8_t direction[]) {
 				BridgePointer();
 			}
 		}
-	} else if ((direction[1] < DIRECT) && (direction[0] == DIRECT)) {
+	} else if ((direction[1] < DIRECT) && (direction[0] == DIRECT)) { //Down
 		if (MODE == 1) {
 			if ((NodePointY==3 && (NodePointX==0 | NodePointX==5)) |
 					(NodePointY==4 && (NodePointX==1 | NodePointX==4)) |
@@ -583,9 +625,9 @@ void JoystickHandler(uint8_t direction[]) {
 		}
 	} else if (direction[5] == SWITCH) {
 		NodePointerClear();
-		//ScoreHandler();
+		ScoreHandler();
 		TURN = (TURN%2)+1;
-		//GatherResource();
+		GatherResource();
 		NodePointX = 2;
 		NodePointY = 0;
 		BridgePointX = 2;
