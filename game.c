@@ -38,7 +38,7 @@ int MODE = 1;
 /*Turn {Player 1 = 1, Player 2 = 2}*/ 
 int TURN = 1;
 
-int LOCK = 0;
+int LOCK = 1;
 
 /*Pointers*/
 int NodePointX = 2;
@@ -49,17 +49,19 @@ int BridgePointY = 0;
 /*Box Randomized*/
 int box_color[13]={0,1,1,1,2,2,2,3,3,3,4,4,4};	// Keep track of color of box
 int box_count[13]={0,1,1,1,1,2,2,2,2,3,3,3,3};	// Keep track of color dots
+int ack_box[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 /*Ownership {Player X}*/
 int node_owner[6][6]={0};
 int bridge_owner[11][6]={0};
 
 /*ResourceTracker Red/Blue/Yellow/Green */
-int Player1Res[4] = {2,2,6,6};
+int Player1Res[4] = {50,50,50,50};
 int Player2Res[4] = {2,2,6,6};
 
 /*Score Tracker*/
-int Score[2] = {0}; //Player 1 : Player 2
+int Score[2] = {14,0}; //Player 1 : Player 2
+int BridgeScore[2] = {0,0};
 
 struct ArrayCoords {
 	int X;
@@ -99,18 +101,18 @@ struct ArrayCoords NodeCoord[6][6] = {
 {{0,0},     {0,0},      {206, 138}, {206, 174}, {0,0},      {0,0}}
 };
 
-struct ArrayBridgeCoords BridgeCoord[11][6] = {	
+struct ArrayBridgeCoords BridgeCoord[11][6] = {
 {{0,0,0,0},						{0,0,0,0},						{109, 133, 69, 72},		{0,0,0,0},						{0,0,0,0},						{0,0,0,0}},						//H
 {{0,0,0,0},						{0,0,0,0},						{101, 104, 77, 101},	{137, 140, 77, 101},	{0,0,0,0},						{0,0,0,0}},						//V
-{{0,0,0,0},						{73, 97, 105, 108}, 	{109, 133, 105, 108}, {139, 174, 105, 108},	{0,0,0,0},						{0,0,0,0}},						//H
+{{0,0,0,0},						{73, 97, 105, 108}, 	{109, 133, 105, 108}, {145, 169, 105, 108},	{0,0,0,0},						{0,0,0,0}},						//H
 {{0,0,0,0},						{65, 68, 113, 137}, 	{101, 104, 113, 137}, {137, 140, 113, 137}, {173, 176, 113, 137},	{0,0,0,0}},						//V
-{{37, 61, 141, 144}, 	{73, 97, 141, 144}, 	{109, 133, 147, 138}, {139, 174, 141, 144}, {181, 205, 141, 144},	{0,0,0,0}},						//H
-{{29, 32, 143, 179}, 	{65, 68, 143, 179}, 	{101, 104, 143, 179}, {137, 140, 143, 179}, {173, 176, 143, 179}, {209, 212, 143, 179}},//V
-{{37, 61, 177, 180}, 	{73, 97, 177, 180}, 	{109, 133, 183, 174}, {139, 174, 177, 180}, {181, 205, 177, 180},	{0,0,0,0}},						//H
-{{0,0,0,0},						{65, 68, 179, 215}, 	{101, 104, 179, 215}, {137, 140, 179, 215}, {173, 176, 179, 215},	{0,0,0,0}},						//V
-{{0,0,0,0},						{73, 97, 213, 216}, 	{109, 133, 219, 210}, {139, 174, 213, 216},	{0,0,0,0},						{0,0,0,0}},						//H
-{{0,0,0,0},						{0,0,0,0},						{101, 104, 215, 251}, {137, 140, 215, 251},	{0,0,0,0},						{0,0,0,0}},						//V
-{{0,0,0,0},						{0,0,0,0},						{109, 133, 255, 246},	{0,0,0,0},						{0,0,0,0},						{0,0,0,0}}						//H										
+{{37, 61, 141, 144}, 	{73, 97, 141, 144}, 	{109, 133, 141, 144}, {145, 169, 141, 144}, {181, 205, 141, 144},	{0,0,0,0}},						//H
+{{29, 32, 149, 173}, 	{65, 68, 149, 173}, 	{101, 104, 149, 173}, {137, 140, 149, 173}, {173, 176, 149, 173}, {209, 212, 149, 173}},//V
+{{37, 61, 177, 180}, 	{73, 97, 177, 180}, 	{109, 133, 177, 180}, {145, 169, 177, 180}, {181, 205, 177, 180},	{0,0,0,0}},						//H
+{{0,0,0,0},						{65, 68, 185, 209}, 	{101, 104, 185, 209}, {137, 140, 185, 209}, {173, 176, 185, 209},	{0,0,0,0}},						//V
+{{0,0,0,0},						{73, 97, 213, 216}, 	{109, 133, 213, 216}, {145, 169, 213, 216},	{0,0,0,0},						{0,0,0,0}},						//H
+{{0,0,0,0},						{0,0,0,0},						{101, 104, 221, 245}, {137, 140, 221, 245},	{0,0,0,0},						{0,0,0,0}},						//V
+{{0,0,0,0},						{0,0,0,0},						{109, 133, 249, 252},	{0,0,0,0},						{0,0,0,0},						{0,0,0,0}}						//H										
 };
 
 void initialize_arrays() {
@@ -147,61 +149,61 @@ void initialize_arrays() {
 
 void ScoreHandler() {
 	LOCK = 1;
-	for (int i=0; i<10; i++) {
-		for (int j=0; j<5; j++) {
-			if (bridge_owner[i][j] == 1) {
-				Score[0]+=2;
-			} else if (bridge_owner[i][j] == 2) {
-				Score[1]+=2;
-			}
-		}
-	}
 	LCD_DrawNumTitle(140, 10, 20, 40, 4, 10, BLACK);
 	LCD_DrawNumTitle(160, 10, 20, 40, 4, 10, BLACK);
 	LCD_DrawNumTitle(200, 10, 20, 40, 4, 10, BLACK);
 	LCD_DrawNumTitle(220, 10, 20, 40, 4, 10, BLACK);
-	LCD_DrawNumTitle(140, 10, 20, 40, 4, floor(Score[0]/10), ORANGE);
-	LCD_DrawNumTitle(160, 10, 20, 40, 4, Score[0]%10, ORANGE);
-	LCD_DrawNumTitle(200, 10, 20, 40, 4, floor(Score[1]/10), PURPLE);
-	LCD_DrawNumTitle(220, 10, 20, 40, 4, Score[1]%10, PURPLE);
-	if (Score[0] == 15 | Score[1] == 15) {
-		if (Score[0] == 15) {
-			// Player1 Winning Screen
-		} else {
-			// Player2 Winning Screen
+	LCD_DrawNumTitle(140, 10, 20, 40, 4, floor((Score[0]+BridgeScore[0])/10), ORANGE);
+	LCD_DrawNumTitle(160, 10, 20, 40, 4, (Score[0]+BridgeScore[0])%10, ORANGE);
+	LCD_DrawNumTitle(200, 10, 20, 40, 4, floor((Score[1]+BridgeScore[1])/10), PURPLE);
+	LCD_DrawNumTitle(220, 10, 20, 40, 4, (Score[1]+BridgeScore[1])%10, PURPLE);
+	if ((Score[0]+BridgeScore[0]) >= 15 | (Score[1]+BridgeScore[1]) >= 15) {
+		while ((Score[0]+BridgeScore[0]) >= 15) {
+			LCD_DrawNumTitle(140, 10, 20, 40, 4, 10, BLACK);
+			LCD_DrawNumTitle(160, 10, 20, 40, 4, 10, BLACK);
+			for (int i=0;i<200000;i++);
+			LCD_DrawNumTitle(140, 10, 20, 40, 4, floor((Score[0]+BridgeScore[0])/10), ORANGE);
+			LCD_DrawNumTitle(160, 10, 20, 40, 4, (Score[0]+BridgeScore[0])%10, ORANGE);
+			for (int i=0;i<(2000000);i++);
 		}
 	}
 	LOCK = 0;
 }
 
-void RefreshResourceBoard() {
+void RefreshResourceBoard(int mode) {
 	int thickness = 2;
 	int RightPixel = 70;
 	int LeftPixel = 15;
 	int height = 20;
 	int length = 14;
 	if (TURN == 1) {
+		if (mode == 1) {
 		LCD_DrawNumTitle(10+LeftPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
-		LCD_DrawNumTitle(10+RightPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
 		LCD_DrawNumTitle(10+LeftPixel, 270, length, height, thickness, floor(Player1Res[0]/10), ORANGE);
 		LCD_DrawNumTitle(10+LeftPixel+length, 270, length, height, thickness, Player1Res[0]%10, ORANGE);
 		LCD_DrawNumTitle(10+LeftPixel, 295, length, height, thickness, floor(Player1Res[1]/10), ORANGE);
 		LCD_DrawNumTitle(10+LeftPixel+length, 295, length, height, thickness, Player1Res[1]%10, ORANGE);
+		} else {
+		LCD_DrawNumTitle(10+RightPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
 		LCD_DrawNumTitle(10+RightPixel, 270, length, height, thickness, floor(Player1Res[2]/10), ORANGE);
 		LCD_DrawNumTitle(10+RightPixel+length, 270, length, height, thickness, Player1Res[2]%10, ORANGE);
 		LCD_DrawNumTitle(10+RightPixel, 295, length, height, thickness, floor(Player1Res[3]/10), ORANGE);
 		LCD_DrawNumTitle(10+RightPixel+length, 295, length, height, thickness, Player1Res[3]%10, ORANGE);
+		}
 	} else if (TURN == 2) {
+		if (mode == 1) {
 		LCD_DrawNumTitle(140+LeftPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
-		LCD_DrawNumTitle(140+RightPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
 		LCD_DrawNumTitle(140+LeftPixel, 270, length, height, thickness, floor(Player2Res[0]/10), PURPLE);
 		LCD_DrawNumTitle(140+LeftPixel+length, 270, length, height, thickness, Player2Res[0]%10, PURPLE);
 		LCD_DrawNumTitle(140+LeftPixel, 295, length, height, thickness, floor(Player2Res[1]/10), PURPLE);
 		LCD_DrawNumTitle(140+LeftPixel+length, 295, length, height, thickness, Player2Res[1]%10, PURPLE);
+		} else {
+		LCD_DrawNumTitle(140+RightPixel, 270, 2*length, 2*height+5, thickness, 10, BLACK);
 		LCD_DrawNumTitle(140+RightPixel, 270, length, height, thickness, floor(Player2Res[2]/10), PURPLE);
 		LCD_DrawNumTitle(140+RightPixel+length, 270, length, height, thickness, Player2Res[2]%10, PURPLE);
 		LCD_DrawNumTitle(140+RightPixel, 295, length, height, thickness, floor(Player2Res[3]/10), PURPLE);
 		LCD_DrawNumTitle(140+RightPixel+length, 295, length, height, thickness, Player2Res[3]%10, PURPLE);
+		}
 	}
 }
 
@@ -235,7 +237,8 @@ void GatherResource() {
 			}
 		}
 	}
-	RefreshResourceBoard();
+	RefreshResourceBoard(1);
+	RefreshResourceBoard(2);
 }
 
 void PurchaseNode() {
@@ -243,8 +246,8 @@ void PurchaseNode() {
 		if (TURN == 1) {
 			if (Player1Res[2] >= 3 && Player1Res[3] >= 3) {
 				node_owner[NodePointX][NodePointY] = 1;
-				Player1Res[2]-=2;
-				Player1Res[3]-=2;
+				Player1Res[2]-=3;
+				Player1Res[3]-=3;
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
 							NodeCoord[NodePointX][NodePointY].Y,
 							10,
@@ -254,12 +257,13 @@ void PurchaseNode() {
 							6,
 							DARKGREEN);
 				Score[0]++;
+				RefreshResourceBoard(2);
 			}
 		} else if (TURN == 2) {
 			if (Player2Res[2] >= 3 && Player2Res[3] >= 3) {
 				node_owner[NodePointX][NodePointY] = 2;
-				Player2Res[2]-=2;
-				Player2Res[3]-=2;
+				Player2Res[2]-=3;
+				Player2Res[3]-=3;
 				LCD_Circle(	NodeCoord[NodePointX][NodePointY].X,
 							NodeCoord[NodePointX][NodePointY].Y,
 							10,
@@ -269,9 +273,9 @@ void PurchaseNode() {
 							6,
 							DARKGREEN);
 				Score[1]++;
+				RefreshResourceBoard(2);
 			}
 		}
-		RefreshResourceBoard();
 	}
 }
 
@@ -279,133 +283,180 @@ void BoxCheck() {
 	if ((bridge_owner[0][2] == TURN) &
 			(bridge_owner[2][2] == TURN) &
 			(bridge_owner[1][2] == TURN) &
-			(bridge_owner[1][3] == TURN)) {
+			(bridge_owner[1][3] == TURN) &
+			(ack_box[0] != 1)) {
 		resourceavailable[3][1].owner = TURN;
+		ack_box[0] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[2][1] == TURN) &
 			(bridge_owner[3][1] == TURN) &
 			(bridge_owner[4][1] == TURN) &
-			(bridge_owner[3][2] == TURN)) {
+			(bridge_owner[3][2] == TURN) &
+			(ack_box[1] != 1)) {
 		resourceavailable[2][2].owner = TURN;
+		ack_box[1] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[2][2] == TURN) &
 			(bridge_owner[3][2] == TURN) &
 			(bridge_owner[4][2] == TURN) &
-			(bridge_owner[3][3] == TURN)) {
+			(bridge_owner[3][3] == TURN) &
+			(ack_box[2] != 1)) {
 		resourceavailable[3][2].owner = TURN;
+		ack_box[2] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[2][3] == TURN) &
 			(bridge_owner[3][3] == TURN) &
 			(bridge_owner[4][3] == TURN) &
-			(bridge_owner[3][4] == TURN)) {
+			(bridge_owner[3][4] == TURN) &
+			(ack_box[3] != 1)) {
 		resourceavailable[4][2].owner = TURN;
+		ack_box[3] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][0] == TURN) &
 			(bridge_owner[5][0] == TURN) &
 			(bridge_owner[6][0] == TURN) &
-			(bridge_owner[5][1] == TURN)) {
+			(bridge_owner[5][1] == TURN) &
+			(ack_box[4] != 1)) {
 		resourceavailable[1][3].owner = TURN;
+		ack_box[4] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][1] == TURN) &
 			(bridge_owner[5][1] == TURN) &
 			(bridge_owner[6][1] == TURN) &
-			(bridge_owner[5][2] == TURN)) {
+			(bridge_owner[5][2] == TURN) &
+			(ack_box[5] != 1)) {
 		resourceavailable[2][3].owner = TURN;
+		ack_box[5] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][2] == TURN) &
 			(bridge_owner[5][2] == TURN) &
 			(bridge_owner[6][2] == TURN) &
-			(bridge_owner[5][3] == TURN)) {
+			(bridge_owner[5][3] == TURN) &
+			(ack_box[6] != 1)) {
 		resourceavailable[3][3].owner = TURN;
+		ack_box[6] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][3] == TURN) &
 			(bridge_owner[5][3] == TURN) &
 			(bridge_owner[6][3] == TURN) &
-			(bridge_owner[5][4] == TURN)) {
+			(bridge_owner[5][4] == TURN) &
+			(ack_box[7] != 1)) {
 		resourceavailable[4][3].owner = TURN;
+		ack_box[7] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[4][4] == TURN) &
 			(bridge_owner[5][4] == TURN) &
 			(bridge_owner[6][4] == TURN) &
-			(bridge_owner[5][5] == TURN)) {
+			(bridge_owner[5][5] == TURN) &
+			(ack_box[8] != 1)) {
 		resourceavailable[5][3].owner = TURN;
+		ack_box[8] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[6][1] == TURN) &
 			(bridge_owner[7][1] == TURN) &
 			(bridge_owner[8][1] == TURN) &
-			(bridge_owner[7][2] == TURN)) {
+			(bridge_owner[7][2] == TURN) &
+			(ack_box[9] != 1)) {
 		resourceavailable[2][4].owner = TURN;
+		ack_box[9] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[6][2] == TURN) &
 			(bridge_owner[7][2] == TURN) &
 			(bridge_owner[8][2] == TURN) &
-			(bridge_owner[7][3] == TURN)) {
+			(bridge_owner[7][3] == TURN) &
+			(ack_box[10] != 1)) {
 		resourceavailable[3][4].owner = TURN;
+		ack_box[10] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[6][3] == TURN) &
 			(bridge_owner[7][3] == TURN) &
 			(bridge_owner[8][3] == TURN) &
-			(bridge_owner[7][4] == TURN)) {
+			(bridge_owner[7][4] == TURN) &
+			(ack_box[11] != 1)) {
 		resourceavailable[4][4].owner = TURN;
+		ack_box[11] = 1;
 		Score[TURN-1]+=3;
 	}
 	if ((bridge_owner[8][2] == TURN) &
 			(bridge_owner[9][2] == TURN) &
 			(bridge_owner[10][2] == TURN) &
-			(bridge_owner[9][3] == TURN)) {
+			(bridge_owner[9][3] == TURN) &
+			(ack_box[12] != 1)) {
 		resourceavailable[3][5].owner = TURN;
+		ack_box[12] = 1;
 		Score[TURN-1]+=3;
 	}
 }
 
+void RefreshBridgePoint() {
+	int temp[2] = {0,0};
+	for (int i=0; i<10; i++) {
+		for (int j=0; j<5; j++) {
+			if (bridge_owner[i][j] == 1) {
+				temp[0]++;
+			} else if (bridge_owner[i][j] == 2) {
+				temp[1]++;
+			}
+		}
+	}
+	if (temp[1] > temp[0]) {
+		BridgeScore[1] = 2;
+	} else if (temp[0] > temp[1]) {
+		BridgeScore[0] = 2;
+	} else {
+		BridgeScore[0] = 0;
+		BridgeScore[1] = 0;
+	}
+}
 void PurchaseBridge() {
-	if (bridge_owner[BridgePointX][BridgePointY] == 0) {
+	if (bridge_owner[BridgePointY][BridgePointX] == 0) {
 		if (TURN == 1) {
-			if (Player1Res[0] >= 1 && Player1Res[3]>=1) {
-				bridge_owner[BridgePointX][BridgePointY] = 1;
+			if (Player1Res[0] >= 1 && Player1Res[1]>=1) {
+				bridge_owner[BridgePointY][BridgePointX] = 1;
 				Player1Res[0]--;
 				Player1Res[1]--;
-			}
-			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
+				LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
 								BridgeCoord[BridgePointY][BridgePointX].XF,
 								BridgeCoord[BridgePointY][BridgePointX].YS,
 								BridgeCoord[BridgePointY][BridgePointX].YF,
 								ORANGE);
-			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS+1,
+				LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS+1,
 								BridgeCoord[BridgePointY][BridgePointX].XF-1,
 								BridgeCoord[BridgePointY][BridgePointX].YS+1,
 								BridgeCoord[BridgePointY][BridgePointX].YF-1,
 								DARKGREEN);
+				RefreshResourceBoard(1);
+			}
 		} else if (TURN == 2) {
-			if (Player2Res[0] >= 1 && Player2Res[3]>=1) {
-				bridge_owner[BridgePointX][BridgePointY] = 2;
+			if (Player2Res[0] >= 1 && Player2Res[1]>=1) {
+				bridge_owner[BridgePointY][BridgePointX] = 2;
 				Player2Res[0]--;
 				Player2Res[1]--;
+				LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
+									BridgeCoord[BridgePointY][BridgePointX].XF,
+									BridgeCoord[BridgePointY][BridgePointX].YS,
+									BridgeCoord[BridgePointY][BridgePointX].YF,
+									PURPLE);
+				LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS+1,
+									BridgeCoord[BridgePointY][BridgePointX].XF-1,
+									BridgeCoord[BridgePointY][BridgePointX].YS+1,
+									BridgeCoord[BridgePointY][BridgePointX].YF-1,
+									DARKGREEN);
+				RefreshResourceBoard(1);
 			}
-			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS,
-								BridgeCoord[BridgePointY][BridgePointX].XF,
-								BridgeCoord[BridgePointY][BridgePointX].YS,
-								BridgeCoord[BridgePointY][BridgePointX].YF,
-								PURPLE);
-			LCD_FillRect( BridgeCoord[BridgePointY][BridgePointX].XS+1,
-								BridgeCoord[BridgePointY][BridgePointX].XF-1,
-								BridgeCoord[BridgePointY][BridgePointX].YS+1,
-								BridgeCoord[BridgePointY][BridgePointX].YF-1,
-								DARKGREEN);
 		}
 		BoxCheck();
-		RefreshResourceBoard();
 	}
 }
 
@@ -467,7 +518,7 @@ void BridgePointer() {
 }
 
 void JoystickHandler(uint8_t direction[]) {
-	if (direction[5] == NBMODE) {
+	if ((direction[1] == DIRECT) && (direction[0] == DIRECT) && (direction[5] == NBMODE)) {
 		MODE = (MODE%2)+1;
 		if (MODE == 1) {
 			BridgePointerClear();
@@ -512,7 +563,7 @@ void JoystickHandler(uint8_t direction[]) {
 				BridgePointer();
 			}
 		}
-	} else if ((direction[1] < DIRECT) && (direction[0] == DIRECT)) { //Down
+	} else if ((direction[1] < DIRECT) && (direction[0] == DIRECT) && (direction[5] == 0x03)) { //Down
 		if (MODE == 1) {
 			if ((NodePointY==3 && (NodePointX==0 | NodePointX==5)) |
 					(NodePointY==4 && (NodePointX==1 | NodePointX==4)) |
@@ -623,8 +674,10 @@ void JoystickHandler(uint8_t direction[]) {
 				BridgePointer(); 
 			}
 		}
-	} else if (direction[5] == SWITCH) {
+	} else if ((direction[1] < DIRECT) && (direction[0] == DIRECT) && (direction[5] == NBMODE)) {
 		NodePointerClear();
+		BridgePointerClear();
+		RefreshBridgePoint();
 		ScoreHandler();
 		TURN = (TURN%2)+1;
 		GatherResource();

@@ -31,7 +31,9 @@ extern int Player2Res[4];
 
 extern int Score[2];
 
-int Debug = 1;
+extern int LOCK;
+
+int Debug = 0;
 int DebugAction = 0;
 
 uint8_t SlaveAddress1 = 0b10100101;
@@ -58,7 +60,7 @@ uint8_t RED = 224;
 uint8_t LIGHTBLUE = 215;
 uint8_t BLUE = 35;
 uint8_t LIGHTGREEN = 165;
-uint8_t DARKGREEN = 246;
+uint8_t DARKGREEN = 224;
 uint8_t GREEN = 20;
 uint8_t YELLOW = 248;
 uint8_t ORANGE = 240;
@@ -357,11 +359,14 @@ int main(void){
 	NodePointer();
 	ScoreBoard();
 	ResourceBoard();
-	RefreshResourceBoard();
+	RefreshResourceBoard(1);
+	RefreshResourceBoard(2);
 	TURN = 2;
-	RefreshResourceBoard();
+	RefreshResourceBoard(1);
+	RefreshResourceBoard(2);
 	TURN = 1;
 	initialize_arrays();
+	LOCK = 0;
 	if (DebugAction == 1) {
 		Data_Receive[0] = 0x80; Data_Receive[1] = 0x79;
 		JoystickHandler(Data_Receive);
