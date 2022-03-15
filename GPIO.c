@@ -44,10 +44,6 @@ void GPIO_Init(void){
 	for (int i=0;i<200000;i++); // Some Delay
 	GPIOA->ODR |= GPIO_ODR_ODR_15;
 	for (int i=0;i<200000;i++); // Some Delay
-	
-	RCC->AHB2ENR |= RCC_AHB2ENR_RNGEN;
-	RNG->CR |=RNG_CR_RNGEN;
-	
 }
 
 void SPI_Init(void){

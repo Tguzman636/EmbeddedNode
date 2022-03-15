@@ -33,6 +33,7 @@ extern int Score[2];
 
 extern int LOCK;
 
+int rng = 1;
 int Debug = 0;
 int DebugAction = 0;
 
@@ -67,8 +68,8 @@ uint8_t ORANGE = 240;
 uint8_t PURPLE = 130;
 
 void shuffle(int *array, int n) {
-	srand(600);
-  //srand(RNG->DR);
+	//srand(600);
+  srand(rng);
   for (int i = 0; i < n - 1; i++) {
 		size_t j = i + rand() / (RAND_MAX / (n - i) + 1);
     int t = array[j];
@@ -321,6 +322,37 @@ void ResourceBoard() {
 	LCD_FillRect(RightPixel+123, RightPixel+133, 300, 310, GREEN);
 }
 
+void MENU() {
+	int Xstart = 20;
+	int YOffset = 150;
+	int XOffset = 80;
+	int t = 0;
+	// S
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 10+YOffset, 14+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 6+(Xstart*t)+XOffset, 10+YOffset, 30+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 28+YOffset, 32+YOffset, WHITE);
+	LCD_Rect(14+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 30+YOffset, 50+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 46+YOffset, 50+YOffset, WHITE);
+	t++;
+	// E
+	LCD_Rect(2+(Xstart*t)+XOffset, 6+(Xstart*t)+XOffset, 10+YOffset, 50+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 10+YOffset, 14+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 28+YOffset, 32+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 46+YOffset, 50+YOffset, WHITE);
+	t++;
+	// E
+	LCD_Rect(2+(Xstart*t)+XOffset, 6+(Xstart*t)+XOffset, 10+YOffset, 50+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 10+YOffset, 14+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 28+YOffset, 32+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 46+YOffset, 50+YOffset, WHITE);
+	t++;
+	// D
+	LCD_Rect(2+(Xstart*t)+XOffset, 6+(Xstart*t)+XOffset, 10+YOffset, 50+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 10+YOffset, 14+YOffset, WHITE);
+	LCD_Rect(14+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 14+YOffset, 46+YOffset, WHITE);
+	LCD_Rect(2+(Xstart*t)+XOffset, 18+(Xstart*t)+XOffset, 46+YOffset, 50+YOffset, WHITE);
+}
+
 int main(void){
 	// Clock Setup
 	System_Clock_Init();
@@ -352,6 +384,18 @@ int main(void){
 	
 	LCD_Screen(BLACK);
 	
+	MENU();
+	while(rng == 1) {
+		Data_Conversion = 0;
+		// Conversion Command
+		I2C_SendData(I2C1, SlaveAddress2, &Data_Conversion, 1);
+		// Read Nunchuck Data
+		I2C_ReceiveData(I2C1, SlaveAddress1, Data_Receive, 6);
+		if (Data_Receive[5] == 0x02) {
+			rng = Data_Receive[0]-Data_Receive[1];
+		}
+	}
+	LCD_Screen(BLACK);
 	// Randomize Box
 	shuffle(box_color, 13);
 	DrawResource();
@@ -366,6 +410,7 @@ int main(void){
 	RefreshResourceBoard(2);
 	TURN = 1;
 	initialize_arrays();
+	TurnIndicator();
 	LOCK = 0;
 	if (DebugAction == 1) {
 		Data_Receive[0] = 0x80; Data_Receive[1] = 0x79;

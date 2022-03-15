@@ -56,11 +56,13 @@ int node_owner[6][6]={0};
 int bridge_owner[11][6]={0};
 
 /*ResourceTracker Red/Blue/Yellow/Green */
-int Player1Res[4] = {50,50,50,50};
+int Player1Res[4] = {1,1,3,3};
 int Player2Res[4] = {2,2,6,6};
 
+int Initial_state = 1;
+
 /*Score Tracker*/
-int Score[2] = {14,0}; //Player 1 : Player 2
+int Score[2] = {0,0}; //Player 1 : Player 2
 int BridgeScore[2] = {0,0};
 
 struct ArrayCoords {
@@ -145,6 +147,22 @@ void initialize_arrays() {
 	resourceavailable[3][4].color = box_color[10];
 	resourceavailable[4][4].color = box_color[11];
 	resourceavailable[3][5].color = box_color[12];
+}
+
+void TurnIndicator() {
+	int YS = 70;
+	int YF = 90;
+	if (TURN == 1) {
+		LCD_FillRect(200, 220, YS, YF, BLACK);
+		int XS = 20;
+		int XF = 40;
+		LCD_FillRect(XS, XF, YS, YF, ORANGE);
+	} else if (TURN == 2) {
+		LCD_FillRect(20, 40, YS, YF, BLACK);
+		int XS = 200;
+		int XF = 220;
+		LCD_FillRect(XS, XF, YS, YF, PURPLE);
+	}
 }
 
 void ScoreHandler() {
@@ -279,6 +297,21 @@ void PurchaseNode() {
 	}
 }
 
+void DrawDot(int player, int x, int y) {
+	int offset = 18;
+	if (player == 1) {
+	LCD_Circle(NodeCoord[x-1][y-1].X+offset,
+						 NodeCoord[x-1][y-1].Y+offset,
+						 10,
+						 ORANGE);
+	} else {
+	LCD_Circle(NodeCoord[x-1][y-1].X+offset,
+						 NodeCoord[x-1][y-1].Y+offset,
+						 10,
+						 PURPLE);	
+	}
+}
+
 void BoxCheck() {
 	if ((bridge_owner[0][2] == TURN) &
 			(bridge_owner[2][2] == TURN) &
@@ -288,6 +321,7 @@ void BoxCheck() {
 		resourceavailable[3][1].owner = TURN;
 		ack_box[0] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 3, 1);
 	}
 	if ((bridge_owner[2][1] == TURN) &
 			(bridge_owner[3][1] == TURN) &
@@ -297,6 +331,7 @@ void BoxCheck() {
 		resourceavailable[2][2].owner = TURN;
 		ack_box[1] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 2, 2);
 	}
 	if ((bridge_owner[2][2] == TURN) &
 			(bridge_owner[3][2] == TURN) &
@@ -306,6 +341,7 @@ void BoxCheck() {
 		resourceavailable[3][2].owner = TURN;
 		ack_box[2] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 3, 2);
 	}
 	if ((bridge_owner[2][3] == TURN) &
 			(bridge_owner[3][3] == TURN) &
@@ -315,6 +351,7 @@ void BoxCheck() {
 		resourceavailable[4][2].owner = TURN;
 		ack_box[3] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 4, 2);
 	}
 	if ((bridge_owner[4][0] == TURN) &
 			(bridge_owner[5][0] == TURN) &
@@ -324,6 +361,7 @@ void BoxCheck() {
 		resourceavailable[1][3].owner = TURN;
 		ack_box[4] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 1, 3);
 	}
 	if ((bridge_owner[4][1] == TURN) &
 			(bridge_owner[5][1] == TURN) &
@@ -333,6 +371,7 @@ void BoxCheck() {
 		resourceavailable[2][3].owner = TURN;
 		ack_box[5] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 2, 3);
 	}
 	if ((bridge_owner[4][2] == TURN) &
 			(bridge_owner[5][2] == TURN) &
@@ -342,6 +381,7 @@ void BoxCheck() {
 		resourceavailable[3][3].owner = TURN;
 		ack_box[6] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 3, 3);
 	}
 	if ((bridge_owner[4][3] == TURN) &
 			(bridge_owner[5][3] == TURN) &
@@ -351,6 +391,7 @@ void BoxCheck() {
 		resourceavailable[4][3].owner = TURN;
 		ack_box[7] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 4, 3);
 	}
 	if ((bridge_owner[4][4] == TURN) &
 			(bridge_owner[5][4] == TURN) &
@@ -360,6 +401,7 @@ void BoxCheck() {
 		resourceavailable[5][3].owner = TURN;
 		ack_box[8] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 5, 3);
 	}
 	if ((bridge_owner[6][1] == TURN) &
 			(bridge_owner[7][1] == TURN) &
@@ -369,6 +411,7 @@ void BoxCheck() {
 		resourceavailable[2][4].owner = TURN;
 		ack_box[9] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 2, 4);
 	}
 	if ((bridge_owner[6][2] == TURN) &
 			(bridge_owner[7][2] == TURN) &
@@ -378,6 +421,7 @@ void BoxCheck() {
 		resourceavailable[3][4].owner = TURN;
 		ack_box[10] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 3, 4);
 	}
 	if ((bridge_owner[6][3] == TURN) &
 			(bridge_owner[7][3] == TURN) &
@@ -387,6 +431,7 @@ void BoxCheck() {
 		resourceavailable[4][4].owner = TURN;
 		ack_box[11] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 4, 4);
 	}
 	if ((bridge_owner[8][2] == TURN) &
 			(bridge_owner[9][2] == TURN) &
@@ -396,6 +441,7 @@ void BoxCheck() {
 		resourceavailable[3][5].owner = TURN;
 		ack_box[12] = 1;
 		Score[TURN-1]+=3;
+		DrawDot(TURN, 3, 5);
 	}
 }
 
@@ -677,10 +723,27 @@ void JoystickHandler(uint8_t direction[]) {
 	} else if ((direction[1] < DIRECT) && (direction[0] == DIRECT) && (direction[5] == NBMODE)) {
 		NodePointerClear();
 		BridgePointerClear();
-		RefreshBridgePoint();
-		ScoreHandler();
+		if (Initial_state == 0) {
+			RefreshBridgePoint();
+			ScoreHandler();
+		}
 		TURN = (TURN%2)+1;
-		GatherResource();
+		TurnIndicator();
+		if (Initial_state == 0) {
+			GatherResource();
+		}
+		if (Initial_state == 2) {
+			Player1Res[0] = 1;
+			Player1Res[1] = 1;
+			Player1Res[2] = 3;
+			Player1Res[3] = 3;
+			RefreshResourceBoard(0);
+			RefreshResourceBoard(1); 
+			Initial_state = 0;
+		}
+		if (Initial_state == 1) {
+			Initial_state = 2;
+		}
 		NodePointX = 2;
 		NodePointY = 0;
 		BridgePointX = 2;
